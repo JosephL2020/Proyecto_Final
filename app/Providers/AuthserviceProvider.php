@@ -1,37 +1,24 @@
 <?php
 
-namespace App\Policies;
+namespace App\Providers;
 
 use App\Models\Ticket;
-use App\Models\User;
+use App\Policies\TicketPolicy;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
-class TicketPolicy
+class AuthServiceProvider extends ServiceProvider
 {
-    public function viewAny(User $user): bool { return true; }
+    protected $policies = [
+        Ticket::class => TicketPolicy::class,
+    ];
 
-    public function view(User $user, Ticket $ticket): bool
+    public function boot(): void
     {
-        return ($user->role === 'it' || $user->role === 'manager') || $ticket->created_by === $user->id;
-    }
+        $this->registerPolicies();
 
-    public function create(User $user): bool
-    {
-        return in_array($user->role, ['employee','it','manager'], true);
-    }
-
-    public function update(User $user, Ticket $ticket): bool
-    {
-      
-        return ($user->role === 'manager') || $ticket->assigned_to === $user->id;
-    }
-
-    public function delete(User $user, Ticket $ticket): bool
-    {
-        return ($user->role === 'manager') || $ticket->assigned_to === $user->id;
-    }
-
-    public function assign(User $user, Ticket $ticket): bool
-    {
-        return $user->role === 'manager';
+        Gate::define('manage-users', function ($user) {
+            return $user->role === 'Manager';
+        });
     }
 }

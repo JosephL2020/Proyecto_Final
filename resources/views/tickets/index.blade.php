@@ -26,20 +26,27 @@
   </thead>
   <tbody>
     @foreach($tickets as $ticket)
-      <tr>
-        <td>{{ $ticket->code }}</td>
-        <td>{{ $ticket->title }}</td>
-        <td>
-          <span class="badge text-bg-{{ $ticket->priority=='high'?'danger':($ticket->priority=='medium'?'warning':'secondary') }}">
-            {{ $ticket->priority }}
-          </span>
-        </td>
-        <td>{{ $ticket->status }}</td>
-        <td>{{ $ticket->assignee->name ?? 'Sin asignar' }}</td>
-        <td>{{ $ticket->created_at->format('Y-m-d H:i') }}</td>
-        <td><a href="{{ route('tickets.show', $ticket) }}" class="btn btn-sm btn-outline-primary">Ver</a></td>
-      </tr>
-    @endforeach
+<tr>
+  <td>{{ $ticket->code }}</td>
+  <td>{{ $ticket->title }}</td>
+
+  <td>
+    <span class="badge text-bg-{{ $ticket->priority=='high'?'danger':($ticket->priority=='medium'?'warning':'secondary') }}">
+      {{ $ticket->priority_label }}
+    </span>
+  </td>
+
+  <td>{{ $ticket->status_label }}</td>
+
+  <td>{{ $ticket->assignee?->name ?? 'Sin asignar' }}</td>
+
+  <td>{{ $ticket->created_at->format('Y-m-d H:i') }}</td>
+
+  <td>
+    <a class="btn btn-sm btn-primary" href="{{ route('tickets.show', $ticket) }}">Ver</a>
+  </td>
+</tr>
+@endforeach
   </tbody>
 </table>
 

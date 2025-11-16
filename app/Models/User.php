@@ -13,8 +13,23 @@ class User extends Authenticatable
     protected $fillable = ['name','email','password','role','department_id'];
     protected $hidden = ['password','remember_token'];
 
-    public function department(){ return $this->belongsTo(Department::class); }
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
 
-    public function isManager(): bool { return $this->role === 'Manager'; }
-    public function isIT(): bool { return $this->role === 'it' || $this->role === 'Manager'; }
+    public function isManager(): bool
+    {
+        return $this->role === 'Manager';
+    }
+
+    public function isIT(): bool
+    {
+        return $this->role === 'it' || $this->role === 'Manager';
+    }
+
+    public function isEmployee(): bool
+    {
+        return $this->role === 'employee';
+    }
 }
