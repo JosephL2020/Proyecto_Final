@@ -273,7 +273,7 @@
 
                     <button type="button" id="themeToggle"
                             class="btn btn-sm btn-outline-secondary rounded-pill px-3">
-                        🌙 Modo oscuro
+                        Modo oscuro
                     </button>
 
                     <form method="POST" action="{{ route('logout') }}" class="m-0 p-0">
@@ -319,13 +319,13 @@
             const savedTheme = localStorage.getItem(STORAGE_KEY);
             if (savedTheme === 'dark') {
                 body.classList.add('dark-mode');
-                toggleBtn.innerHTML = '☀️ Modo claro';
+                toggleBtn.innerHTML = 'Modo claro';
             }
 
             toggleBtn.addEventListener('click', function () {
                 const isDark = body.classList.toggle('dark-mode');
                 localStorage.setItem(STORAGE_KEY, isDark ? 'dark' : 'light');
-                this.innerHTML = isDark ? '☀️ Modo claro' : '🌙 Modo oscuro';
+                this.innerHTML = isDark ? 'Modo claro' : 'Modo oscuro';
             });
         }
     })();
