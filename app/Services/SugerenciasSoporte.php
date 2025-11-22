@@ -2,103 +2,180 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
-
 class SugerenciasSoporte
 {
+    /**
+     * Atajo: devuelve solo la lista de pasos.
+     */
     public function get(string $title, string $description, array $ctx = []): array
     {
         [$recs] = $this->generate($title, $description, $ctx);
         return $recs;
     }
 
+    /**
+     * Genera sugerencias de soporte en base al título, descripción y contexto.
+     * Retorna [array $pasos, string $origen]
+     *  - $origen = 'local' (por si luego quieres mostrar de dónde viene).
+     */
     public function generate(string $title, string $description, array $ctx = []): array
     {
-        $texto = trim($title.' '.$description);
-        $cat = trim((string)($ctx['category'] ?? ''));
-        $messages = [
-            ['role'=>'system','content'=>'Devuelve exactamente 3 pasos concretos, cortos y accionables, específicos al problema. Prioriza acciones básicas primero. Solo lista numerada, una línea por paso.'],
-            ['role'=>'user','content'=>"Categoría: Hardware\nProblema: Teclado no escribe algunas teclas"],
-            ['role'=>'assistant','content'=>"1. Desconecta y conecta el teclado; prueba otro puerto y verifica Bloq Mayús/Num\n2. Prueba el teclado en otro equipo y limpia las teclas afectadas\n3. En Administrador de dispositivos, desinstala el teclado y reinicia"],
-            ['role'=>'user','content'=>"Categoría: Software\nProblema: No encuentro Google Chrome en mi computadora"],
-            ['role'=>'assistant','content'=>"1. Pulsa Win y escribe «Chrome»; si no aparece, Win+R y ejecuta chrome\n2. Revisa Programas instalados; si no está, descárgalo e instálalo desde el sitio oficial\n3. Si existe, crea acceso directo desde su ejecutable y ancla a la barra de tareas"],
-            ['role'=>'user','content'=>"Categoría: Red\nProblema: Wi-Fi se desconecta intermitentemente"],
-            ['role'=>'assistant','content'=>"1. Olvida la red y vuelve a conectarte; reinicia el router\n2. Desactiva ahorro de energía del adaptador y actualiza el driver Wi-Fi\n3. Cambia a banda 5 GHz u otro canal; prueba por cable para descartar interferencias"],
-            ['role'=>'user','content'=>"Categoría: ".$cat."\nProblema: ".$texto],
-        ];
+        $text = mb_strtolower(trim($title . ' ' . $description), 'UTF-8');
+        $category = mb_strtolower(trim((string)($ctx['category'] ?? '')), 'UTF-8');
 
-        $orKey = config('services.openrouter.key') ?: env('OPENROUTER_API_KEY');
-        if ($orKey) {
-            $model = env('AI_MODEL', 'meta-llama/llama-3.1-70b-instruct');
-            $res = $this->callOpenRouter($orKey, $model, $messages);
-            if ($res['ok']) return [$res['data'], 'ai'];
-        }
+        $steps = $this->buildSuggestions($text, $category);
 
-        $oaKey = config('services.openai.key') ?: env('OPENAI_API_KEY');
-        if ($oaKey) {
-            $res = $this->callOpenAI($oaKey, env('AI_OPENAI_MODEL', 'gpt-4o-mini'), $messages);
-            if ($res['ok']) return [$res['data'], 'ai'];
-        }
-
-        return [[
-            'Repite la acción y anota el mensaje exacto o ruta afectada',
-            'Reconecta o reinicia según el caso y verifica puertos, rutas o credenciales',
-            'Actualiza o reinstala el componente implicado y prueba en otro equipo o sesión'
-        ], 'fallback'];
+        return [$steps, 'local'];
     }
 
-    protected function callOpenRouter(string $key, string $model, array $messages): array
+    /**
+     * Reglas locales para construir sugerencias.
+     * No usa ninguna API externa.
+     */
+    protected function buildSuggestions(string $text, string $category): array
     {
-        try {
-            $r = Http::timeout(20)
-                ->withHeaders([
-                    'Authorization' => 'Bearer '.$key,
-                    'HTTP-Referer' => url('/'),
-                    'X-Title' => config('app.name', 'Laravel'),
-                ])
-                ->post('https://openrouter.ai/api/v1/chat/completions', [
-                    'model' => $model,
-                    'messages' => $messages,
-                    'temperature' => 0.2,
-                    'top_p' => 0.3,
-                    'max_tokens' => 160,
-                ]);
-            if (!$r->successful()) return ['ok'=>false,'status'=>$r->status(),'body'=>$r->json()];
-            return ['ok'=>true,'data'=>$this->toList($r->json())];
-        } catch (\Throwable $e) {
-            return ['ok'=>false,'status'=>0,'body'=>$e->getMessage()];
-        }
-    }
+        $pool = [];
 
-    protected function callOpenAI(string $key, string $model, array $messages): array
-    {
-        try {
-            $r = Http::timeout(20)
-                ->withToken($key)
-                ->post('https://api.openai.com/v1/chat/completions', [
-                    'model' => $model,
-                    'messages' => $messages,
-                    'temperature' => 0.2,
-                    'top_p' => 0.3,
-                    'max_tokens' => 160,
-                ]);
-            if (!$r->successful()) return ['ok'=>false,'status'=>$r->status(),'body'=>$r->json()];
-            return ['ok'=>true,'data'=>$this->toList($r->json())];
-        } catch (\Throwable $e) {
-            return ['ok'=>false,'status'=>0,'body'=>$e->getMessage()];
+        // =========================
+        // HARDWARE: no enciende / PC / laptop
+        // =========================
+        if (
+            str_contains($text, 'no enciende') ||
+            str_contains($text, 'no prende') ||
+            str_contains($text, 'no enciende mi computadora') ||
+            str_contains($category, 'hardware')
+        ) {
+            $pool = [
+                'Verifica que el equipo esté conectado correctamente a la corriente y prueba otro tomacorriente o extensión.',
+                'Revisa el cable de alimentación, cargador o UPS y valida si otro dispositivo en el mismo contacto funciona bien.',
+                'Realiza un reinicio eléctrico: desconecta el equipo 1 minuto, mantén presionado el botón de encendido 10–15 segundos y vuelve a conectar.',
+                'Prueba con otro cargador o cable de poder para descartar daño del adaptador o fuente.',
+                'Si el equipo enciende pero no da imagen, prueba con otro monitor o salida de video.',
+            ];
         }
-    }
 
-    protected function toList(array $json): array
-    {
-        $content = data_get($json, 'choices.0.message.content', '');
-        $lines = preg_split('/[\r\n]+/', trim($content));
-        $out = [];
-        foreach ($lines as $l) {
-            $l = preg_replace('/^\s*\d+[\).\-\:]\s*/', '', $l);
-            if ($l !== '') $out[] = $l;
-            if (count($out) === 3) break;
+        // =========================
+        // TECLADO / MOUSE
+        // =========================
+        elseif (
+            str_contains($text, 'teclado') ||
+            str_contains($text, 'teclas') ||
+            str_contains($text, 'mouse') ||
+            str_contains($text, 'ratón')
+        ) {
+            $pool = [
+                'Conecta el teclado o mouse en otro puerto USB y valida si Windows lo detecta correctamente.',
+                'Prueba el periférico en otro equipo para descartar que el problema sea del dispositivo.',
+                'En Administrador de dispositivos, desinstala el teclado/mouse y reinicia el equipo para que se reinstale el driver.',
+                'Limpia físicamente las teclas o el sensor del mouse y revisa si hay suciedad que obstruya el mecanismo.',
+            ];
         }
-        return $out ?: [$content];
+
+        // =========================
+        // MONITOR / PANTALLA
+        // =========================
+        elseif (
+            str_contains($text, 'monitor') ||
+            str_contains($text, 'pantalla') ||
+            str_contains($text, 'no da imagen')
+        ) {
+            $pool = [
+                'Verifica que el monitor esté encendido y con el botón de encendido iluminado.',
+                'Revisa que el cable de video (HDMI, VGA, DisplayPort, DVI) esté bien conectado en PC y monitor.',
+                'Prueba con otro cable de video o en otro puerto de la tarjeta gráfica si está disponible.',
+                'Conecta el monitor a otro equipo para confirmar si el problema es del monitor o de la PC.',
+            ];
+        }
+
+        // =========================
+        // IMPRESORAS
+        // =========================
+        elseif (
+            str_contains($text, 'impresora') ||
+            str_contains($text, 'imprimir') ||
+            str_contains($category, 'impresora')
+        ) {
+            $pool = [
+                'Revisa que la impresora esté encendida, sin errores en el panel y con papel en la bandeja.',
+                'Verifica que esté seleccionada como impresora predeterminada en el sistema operativo.',
+                'Comprueba que el cable USB o la conexión de red (Wi-Fi / Ethernet) esté activa y sin fallos.',
+                'Reinstala o actualiza el driver desde la página oficial del fabricante.',
+                'Limpia la cola de impresión, reinicia el servicio de cola y vuelve a enviar una prueba.',
+            ];
+        }
+
+        // =========================
+        // INTERNET / RED / WIFI
+        // =========================
+        elseif (
+            str_contains($text, 'internet') ||
+            str_contains($text, 'red') ||
+            str_contains($text, 'wifi') ||
+            str_contains($text, 'wi-fi') ||
+            str_contains($text, 'conexión') ||
+            str_contains($category, 'red')
+        ) {
+            $pool = [
+                'Valida si otros dispositivos en la misma red también presentan el problema (para descartar equipo vs. red).',
+                'Reinicia el router o punto de acceso y espera al menos 2–3 minutos a que restablezca la conexión.',
+                'Ejecuta pruebas básicas: ping al gateway, renovar IP (ipconfig /release /renew) y limpiar DNS (ipconfig /flushdns).',
+                'Revisa el cable de red, conectores RJ45 y que el adaptador de red aparezca habilitado en el sistema.',
+                'Si es Wi-Fi, prueba acercarte al router o cambiar de banda (2.4 / 5 GHz) para descartar interferencias.',
+            ];
+        }
+
+        // =========================
+        // CORREO / EMAIL
+        // =========================
+        elseif (
+            str_contains($text, 'correo') ||
+            str_contains($text, 'email') ||
+            str_contains($text, 'outlook') ||
+            str_contains($category, 'correo')
+        ) {
+            $pool = [
+                'Confirma que el usuario y la contraseña sean correctos e intenta acceder desde el webmail.',
+                'Revisa la conexión a internet y verifica si otros sitios se cargan normalmente.',
+                'Valida la configuración del servidor de correo (IMAP/POP3/SMTP, puertos y cifrado).',
+                'Limpia la bandeja de salida, archivos PST/OST en mal estado y ejecuta una reparación de Outlook si aplica.',
+                'Consulta si existe alguna política de tamaño límite o bloqueo de adjuntos que esté afectando el envío.',
+            ];
+        }
+
+        // =========================
+        // SOFTWARE / SISTEMA / PROGRAMAS
+        // =========================
+        elseif (
+            str_contains($text, 'error') ||
+            str_contains($text, 'aplicación') ||
+            str_contains($text, 'programa') ||
+            str_contains($text, 'sistema') ||
+            str_contains($category, 'software')
+        ) {
+            $pool = [
+                'Anota el mensaje de error exacto y en qué momento aparece (inicio, carga de archivo, guardar, etc.).',
+                'Cierra y vuelve a abrir la aplicación; si es posible, reinicia el equipo y prueba de nuevo.',
+                'Limpia archivos temporales, caché del sistema y revisa si hay actualizaciones pendientes del programa.',
+                'Reinstala o repara la aplicación desde su instalador oficial manteniendo las configuraciones necesarias.',
+                'Verifica permisos del usuario (lectura/escritura) sobre las carpetas o archivos que utiliza el sistema.',
+            ];
+        }
+
+        // =========================
+        // CASO GENÉRICO
+        // =========================
+        else {
+            $pool = [
+                'Reproduce el problema y documenta paso a paso lo que haces y el resultado obtenido.',
+                'Verifica conexiones físicas, accesos, credenciales y permisos relacionados con el servicio afectado.',
+                'Realiza pruebas básicas de reinicio (equipo, servicio o aplicación) y valida si el comportamiento cambia.',
+                'Consulta registros del sistema (logs, visor de eventos o consola) para identificar mensajes de error.',
+                'Registra la evidencia (capturas, hora, usuario, equipo) para documentar la incidencia o escalarla.',
+            ];
+        }
+
+        // ---- Tomar máximo 3 pasos, mezclados para dar pequeña variación ----
+        shuffle($pool);
+        return array_slice($pool, 0, 3);
     }
 }
