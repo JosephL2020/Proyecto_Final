@@ -3,9 +3,6 @@
 @section('content')
 <div class="container-fluid">
 
-    {{-- Chart.js --}}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     {{-- Estilos específicos del dashboard (corporativo moderno y compacto) --}}
     <style>
         .kpi-link {
@@ -346,9 +343,9 @@
         </div>
     </div>
 
-    {{-- FILA 4: Rendimiento por soporte IT + Top categorías (lista) --}}
+    {{-- FILA 4: Rendimiento por soporte IT + Top categorías --}}
     <div class="row g-3">
-        {{-- Tabla IT con KPIs por usuario --}}
+        {{-- Tabla IT --}}
         <div class="col-lg-8">
             <div class="mb-1">
                 <span class="section-title">Rendimiento por soporte (IT)</span>
@@ -429,7 +426,7 @@
             </div>
         </div>
 
-        {{-- Top categorías (lista con barras) --}}
+        {{-- Top categorías --}}
         <div class="col-lg-4">
             @php
                 $maxTickets = max(1, optional($topCategories)->max('tickets_count') ?? 1);
@@ -471,6 +468,7 @@
 
 {{-- Scripts de Chart.js --}}
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     // Datos para gráfica de tickets por día
     const dailyLabels = @json($chartDaily['labels']);
@@ -488,8 +486,8 @@
                     fill: true,
                     tension: 0.35,
                     borderWidth: 2,
-                    borderColor: 'rgba(59, 130, 246, 1)',       // azul vivo
-                    backgroundColor: 'rgba(59, 130, 246, 0.25)', // azul claro translúcido
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.25)',
                     pointRadius: 4,
                     pointHoverRadius: 5,
                     pointBackgroundColor: 'rgba(37, 99, 235, 1)',

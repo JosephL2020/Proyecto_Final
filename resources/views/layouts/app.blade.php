@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    
+
     {{-- Token CSRF para peticiones AJAX --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -36,12 +36,12 @@
         header.app-header {
             background: linear-gradient(90deg, #0d6efd, #0b5ed7);
         }
-        /* Fuente más fuerte en la opción activa GR */ 
-        .nav-link.active {
-        font-weight: 800 !important; /* más grueso que el 600 por defecto */
-        color: #1e3a8a !important;   /* azul oscuro, más contraste */
-        }
 
+        /* Opción activa en el menú */
+        .nav-link.active {
+            font-weight: 800 !important;
+            color: #1e3a8a !important;
+        }
     </style>
 </head>
 <body>
@@ -54,27 +54,43 @@
     </div>
 </header>
 
+{{-- NAVBAR PRINCIPAL --}}
 <nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm mb-4">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{{ route('tickets.index') }}">
-            Sistema de Tickets
-        </a>
+
+
+
+        {{-- Botón modo móvil --}}
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarNav" aria-controls="navbarNav"
                 aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
+        {{-- Contenido del menú --}}
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                @auth
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('tickets.*') ? 'active' : '' }}"
-                           href="{{ route('tickets.index') }}">
-                            Tickets
-                        </a>
-                    </li>
 
+            {{-- Menú izquierdo --}}
+            <ul class="navbar-nav me-auto">
+
+                {{-- Dashboard --}}
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('dashboard.index') ? 'active' : '' }}"
+                       href="{{ route('dashboard.index') }}">
+                        Dashboard
+                    </a>
+                </li>
+
+                {{-- Tickets --}}
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('tickets.*') ? 'active' : '' }}"
+                       href="{{ route('tickets.index') }}">
+                        Tickets
+                    </a>
+                </li>
+
+                {{-- Usuarios (solo Manager) --}}
+                @auth
                     @if(auth()->user()->isManager())
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}"
@@ -82,17 +98,13 @@
                                 Usuarios
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('dashboard.index') ? 'active' : '' }}"
-                               href="{{ route('dashboard.index') }}">
-                                Panel de Control
-                            </a>
-                        </li>
                     @endif
                 @endauth
             </ul>
 
+            {{-- Menú derecho: usuario + sesión --}}
             <ul class="navbar-nav">
+
                 @guest
                     @if(!request()->routeIs('login'))
                         <li class="nav-item">
@@ -109,6 +121,7 @@
                             default   => 'Empleado'
                         };
                     @endphp
+
                     <li class="nav-item d-flex align-items-center me-2">
                         <span class="nav-link">
                             {{ auth()->user()->name }} - {{ $rol }}
