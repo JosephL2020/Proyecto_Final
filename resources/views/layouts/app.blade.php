@@ -153,6 +153,23 @@
             color: #9ca3af;
         }
 
+                /* SOLUCIÓN PARA SVG GIGANTE - Forzar tamaño de flechas */
+        svg.w-5.h-5 {
+            width: 20px !important;
+            height: 20px !important;
+            min-width: 20px !important;
+            min-height: 20px !important;
+            max-width: 20px !important;
+            max-height: 20px !important;
+        }
+
+        /* Específico para botones de paginación */
+        a.relative.inline-flex.items-center.px-2.py-2.text-sm svg {
+            width: 20px !important;
+            height: 20px !important;
+            flex-shrink: 0;
+        }
+
         /* BADGES */
         body.dark-mode .badge.bg-light,
         body.dark-mode .badge.bg-white {
