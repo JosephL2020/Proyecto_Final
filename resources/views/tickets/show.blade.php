@@ -613,56 +613,111 @@
       </div>
     </div>
 
-    {{-- Línea de tiempo --}}
-    <div class="card mb-3">
-      <div class="card-body">
-        <h6 class="mb-2">Línea de tiempo del ticket</h6>
+{{-- Línea de tiempo --}}
+<div class="card mb-3">
+  <div class="card-body">
+    <h6 class="mb-2">Línea de tiempo del ticket</h6>
 
-        <div class="timeline">
-          {{-- Creación --}}
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-title">Ticket creado</div>
-            <div class="timeline-time">
-              {{ $ticket->created_at?->format('Y-m-d H:i') }}
-            </div>
-            <div class="timeline-body">
-              El ticket fue registrado en el sistema.
-            </div>
-          </div>
+    <style>
+      <style>
+        .timeline {
+          position: relative;
+          margin-left: 10px; /* pequeño margen a la izquierda */
+          padding-left: 20px; /* espacio para los puntos */
+        }
 
-          {{-- Asignación --}}
-          @if($assignee)
-            <div class="timeline-item">
-              <div class="timeline-dot" style="background:#22c55e; box-shadow:0 0 0 4px rgba(34,197,94,.2);"></div>
-              <div class="timeline-title">Asignado a soporte</div>
-              <div class="timeline-time">
-                {{ $ticket->updated_at?->format('Y-m-d H:i') }}
-              </div>
-              <div class="timeline-body">
-                El ticket fue asignado a {{ $assignee->name }} ({{ $assignee->role }}).
-              </div>
-            </div>
-          @endif
+        /* Línea vertical principal */
+        .timeline::before {
+          content: "";
+          position: absolute;
+          left: 6px;
+          top: 0;
+          bottom: 0;
+          width: 2px;
+          background: #e5e7eb;
+        }
 
-          {{-- Cierre/resolución --}}
-          @if(in_array($ticket->status, ['resolved','closed','cancelled']))
-            <div class="timeline-item">
-              <div class="timeline-dot" style="background:#6b7280; box-shadow:0 0 0 4px rgba(107,114,128,.2);"></div>
-              <div class="timeline-title">
-                Ticket {{ $ticket->status_label }}
-              </div>
-              <div class="timeline-time">
-                {{ $ticket->updated_at?->format('Y-m-d H:i') }}
-              </div>
-              <div class="timeline-body">
-                El ticket fue marcado como {{ strtolower($ticket->status_label) }}.
-              </div>
-            </div>
-          @endif
+        .timeline-item {
+          position: relative;
+          margin-bottom: 20px;
+          padding-left: 25px;
+        }
+
+        .timeline-dot {
+          position: absolute;
+          left: -3px;
+          top: 5px;
+          width: 12px;
+          height: 12px;
+          background: #3b82f6;
+          border-radius: 50%;
+          box-shadow: 0 0 0 4px rgba(59,130,246,0.2);
+        }
+
+        .timeline-title {
+          font-weight: 600;
+          margin-bottom: 2px;
+        }
+
+        .timeline-time {
+          font-size: 0.85rem;
+          color: #6b7280;
+          margin-bottom: 4px;
+        }
+
+        .timeline-body {
+          font-size: 0.9rem;
+          color: #374151;
+        }
+</style>
+
+    </style>
+
+    <div class="timeline">
+      {{-- Creación --}}
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-title">Ticket creado</div>
+        <div class="timeline-time">
+          {{ $ticket->created_at?->format('Y-m-d H:i') }}
+        </div>
+        <div class="timeline-body">
+          El ticket fue registrado en el sistema.
         </div>
       </div>
+
+      {{-- Asignación --}}
+      @if($assignee)
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:#22c55e; box-shadow:0 0 0 4px rgba(34,197,94,.2);"></div>
+          <div class="timeline-title">Asignado a soporte</div>
+          <div class="timeline-time">
+            {{ $ticket->updated_at?->format('Y-m-d H:i') }}
+          </div>
+          <div class="timeline-body">
+            El ticket fue asignado a {{ $assignee->name }} ({{ $assignee->role }}).
+          </div>
+        </div>
+      @endif
+
+      {{-- Cierre/resolución --}}
+      @if(in_array($ticket->status, ['resolved','closed','cancelled']))
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:#6b7280; box-shadow:0 0 0 4px rgba(107,114,128,.2);"></div>
+          <div class="timeline-title">
+            Ticket {{ $ticket->status_label }}
+          </div>
+          <div class="timeline-time">
+            {{ $ticket->updated_at?->format('Y-m-d H:i') }}
+          </div>
+          <div class="timeline-body">
+            El ticket fue marcado como {{ strtolower($ticket->status_label) }}.
+          </div>
+        </div>
+      @endif
     </div>
+  </div>
+</div>
 
     {{-- Botones inferiores --}}
     <div class="d-flex gap-2">
