@@ -36,6 +36,12 @@
         header.app-header {
             background: linear-gradient(90deg, #0d6efd, #0b5ed7);
         }
+        /* Fuente más fuerte en la opción activa GR */ 
+        .nav-link.active {
+        font-weight: 800 !important; /* más grueso que el 600 por defecto */
+        color: #1e3a8a !important;   /* azul oscuro, más contraste */
+        }
+
     </style>
 </head>
 <body>
