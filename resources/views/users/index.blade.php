@@ -153,6 +153,7 @@
     }
 </style>
 
+{{-- Encabezado general --}}
 <div class="d-flex justify-content-between align-items-center mb-3">
     <div>
         <h3 class="mb-1">Gestión de usuarios</h3>
@@ -160,6 +161,15 @@
             Administra roles, estado y actividad de los usuarios del sistema de tickets.
         </div>
     </div>
+</div>
+
+{{-- Título + Botón de nuevo usuario --}}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h4 mb-0">Usuarios</h1>
+
+    <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm">
+        <i class="bi bi-plus-lg me-1"></i> Nuevo usuario
+    </a>
 </div>
 
 @if(session('ok'))
@@ -170,6 +180,7 @@
     <div class="alert alert-danger">{{ session('error') }}</div>
 @endif
 
+{{-- Estadísticas --}}
 <div class="row g-2 mb-3">
     <div class="col-auto">
         <span class="badge rounded-pill text-bg-primary px-3 py-2">
@@ -198,6 +209,7 @@
     </div>
 </div>
 
+{{-- Filtros --}}
 <form method="GET" class="card mb-3">
     <div class="card-body row g-2 align-items-end">
         <div class="col-md-4">
@@ -239,6 +251,32 @@
     <div class="card-body users-card-body">
         <table class="table users-table align-middle mb-0">
             <thead class="users-thead">
+<style>
+    .role-badge {
+        border-radius: 999px;
+        font-size: .75rem;
+        padding: .2rem .6rem;
+        font-weight: 500;
+    }
+    .role-manager {
+        background-color: #e0f2fe;
+        color: #0369a1;
+    }
+    .role-it {
+        background-color: #f5e0ff;
+        color: #6b21a8;
+    }
+    .role-employee {
+        background-color: #e5e7eb;
+        color: #374151;
+    }
+</style>
+
+{{-- Tabla --}}
+<div class="card">
+    <div class="card-body p-0">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
                 <tr>
                     <th>Usuario</th>
                     <th>Correo</th>

@@ -139,6 +139,17 @@
       color: #6b7280;
       font-weight: 600;
   }
+    /* Hover más notorio en el menú superior */
+  .nav-link:hover,
+  .nav-item:hover > .nav-link {
+    background-color: rgba(59, 130, 246, 0.25); /* azul más visible */
+    color: #1d4ed8 !important;
+    box-shadow: 0 0 6px rgba(59, 130, 246, 0.3);
+    transition: all 0.2s ease-in-out;
+    border-radius: 8px;
+  }
+</style>
+
 </style>
 
 <div class="d-flex justify-content-between align-items-center mb-3">

@@ -4,6 +4,7 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
+    {{-- Token CSRF para peticiones AJAX --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>Sistema de Gestión de Tickets - Proyecto Final</title>
@@ -157,6 +158,10 @@
         body.dark-mode .badge.bg-white {
             background-color: #374151 !important;
             color: #e5e7eb !important;
+        /* Opción activa en el menú */
+        .nav-link.active {
+            font-weight: 800 !important;
+            color: #1e3a8a !important;
         }
     </style>
 </head>
@@ -170,28 +175,46 @@
     </div>
 </header>
 
+{{-- NAVBAR PRINCIPAL --}}
 <nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm mb-4">
     <div class="container-fluid">
         <a class="navbar-brand" href="{{ route('tickets.index') }}">
             Sistema de Tickets
         </a>
 
+
+
+
+        {{-- Botón modo móvil --}}
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
 
+        {{-- Contenido del menú --}}
         <div class="collapse navbar-collapse" id="navbarNav">
 
+            {{-- Menú izquierdo --}}
             <ul class="navbar-nav me-auto">
-                @auth
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('tickets.*') ? 'active' : '' }}"
-                           href="{{ route('tickets.index') }}">
-                            Tickets
-                        </a>
-                    </li>
 
+                {{-- Dashboard --}}
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('dashboard.index') ? 'active' : '' }}"
+                       href="{{ route('dashboard.index') }}">
+                        Dashboard
+                    </a>
+                </li>
+
+                {{-- Tickets --}}
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('tickets.*') ? 'active' : '' }}"
+                       href="{{ route('tickets.index') }}">
+                        Tickets
+                    </a>
+                </li>
+
+                {{-- Usuarios (solo Manager) --}}
+                @auth
                     @if(auth()->user()->isManager())
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}"
@@ -210,7 +233,9 @@
                 @endauth
             </ul>
 
+            {{-- Menú derecho: usuario + sesión --}}
             <ul class="navbar-nav">
+
                 @guest
                     @if(!request()->routeIs('login'))
                         <li class="nav-item">
@@ -228,6 +253,7 @@
                     @endphp
 
                     <li class="nav-item d-flex align-items-center me-3">
+                    <li class="nav-item d-flex align-items-center me-2">
                         <span class="nav-link">
                             {{ auth()->user()->name }} - {{ $rol }}
                         </span>
