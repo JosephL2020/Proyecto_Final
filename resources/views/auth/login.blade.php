@@ -1,12 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="d-flex justify-content-center">
+
+{{-- CONTENEDOR COMPLETAMENTE CENTRADO --}}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh; padding-top: 2rem; padding-bottom: 2rem;">
+
     <div class="col-12 col-md-8 col-lg-5">
 
-        <div class="card shadow-sm border-0" style="border-radius: 1rem; margin-top: 1.5rem; margin-bottom: 2rem;">
+        <div class="card shadow-sm border-0" style="border-radius: 1rem;">
             <div class="card-body p-4">
 
+                {{-- Encabezado --}}
                 <div class="text-center mb-3">
                     <div class="mb-2">
                         <span class="badge bg-primary-subtle text-primary border rounded-pill px-3 py-1">
@@ -19,6 +23,7 @@
                     </p>
                 </div>
 
+                {{-- Formulario --}}
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
 
@@ -72,13 +77,13 @@
 
                     {{-- Recordarme + Olvidé contraseña --}}
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div class="form-check">
+                        <div class="form-check small">
                             <input class="form-check-input"
                                    type="checkbox"
                                    name="remember"
                                    id="remember"
                                    {{ old('remember') ? 'checked' : '' }}>
-                            <label class="form-check-label small" for="remember">
+                            <label class="form-check-label" for="remember">
                                 Recordarme
                             </label>
                         </div>
@@ -105,4 +110,5 @@
 
     </div>
 </div>
+
 @endsection

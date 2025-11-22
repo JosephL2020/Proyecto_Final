@@ -10,7 +10,6 @@
     <title>Sistema de Gestión de Tickets - Proyecto Final</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
@@ -20,13 +19,41 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        .navbar-brand {
-            font-weight: 700;
-            letter-spacing: .03em;
+        /* NAVBAR CORPORATIVO */
+        .navbar-custom {
+            font-size: 0.95rem;
+            min-height: 60px;
         }
 
-        header.app-header {
-            background: linear-gradient(90deg, #0d6efd, #0b5ed7);
+        .navbar-custom .nav-link {
+            padding: 0.4rem 0.85rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .navbar-custom .nav-link:hover {
+            color: #1d4ed8;
+        }
+
+        .navbar-custom .nav-link.active {
+            font-weight: 700;
+            color: #1e3a8a !important;
+            border-bottom: 2px solid #1d4ed8;
+            border-radius: 0;
+        }
+
+        .navbar-user-meta {
+            line-height: 1.1;
+            font-size: 0.8rem;
+        }
+
+        .navbar-user-meta .name {
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .navbar-user-meta .role {
+            color: #6b7280;
         }
 
         /* ============================
@@ -38,10 +65,6 @@
             color: #e5e7eb;
         }
 
-        body.dark-mode header.app-header {
-            background: linear-gradient(90deg, #020617, #111827);
-        }
-
         body.dark-mode .navbar,
         body.dark-mode .navbar.bg-white {
             background-color: #020617 !important;
@@ -49,16 +72,21 @@
             border-color: #1f2937 !important;
         }
 
-        body.dark-mode .navbar .navbar-brand {
+        body.dark-mode .navbar-custom .nav-link {
             color: #e5e7eb;
         }
 
-        body.dark-mode .nav-link {
-            color: #e5e7eb;
+        body.dark-mode .navbar-custom .nav-link.active {
+            color: #93c5fd !important;
+            border-bottom-color: #3b82f6;
         }
 
-        body.dark-mode .nav-link.active {
-            color: #0d6efd !important;
+        body.dark-mode .navbar-user-meta .name {
+            color: #f9fafb;
+        }
+
+        body.dark-mode .navbar-user-meta .role {
+            color: #9ca3af;
         }
 
         body.dark-mode .dropdown-menu {
@@ -73,134 +101,103 @@
         /* TARJETAS / PANEL DE CONTROL */
         body.dark-mode .card,
         body.dark-mode .card-body,
-        body.dark-mode .card-header,
-        body.dark-mode .table,
-        body.dark-mode .modal-content {
+        body-dark-mode .card-header,
+        body-dark-mode .table,
+        body-dark-mode .modal-content {
             background-color: #111827 !important;
             color: #f9fafb !important;
             border-color: #4b5563 !important;
         }
 
         body.dark-mode h1,
-        body.dark-mode h2,
-        body.dark-mode h3,
-        body.dark-mode h4,
-        body.dark-mode h5,
-        body.dark-mode h6 {
+        body-dark-mode h2,
+        body-dark-mode h3,
+        body-dark-mode h4,
+        body-dark-mode h5,
+        body-dark-mode h6 {
             color: #f9fafb !important;
         }
 
-        body.dark-mode .text-muted {
+        body-dark-mode .text-muted {
             color: #d1d5db !important;
         }
 
         /* TABLAS */
-        body.dark-mode .table thead {
+        body-dark-mode .table thead {
             background-color: #020617;
             color: #e5e7eb;
         }
 
-        body.dark-mode .table-striped > tbody > tr:nth-of-type(odd) > * {
+        body-dark-mode .table-striped > tbody > tr:nth-of-type(odd) > * {
             --bs-table-accent-bg: #1f2937;
             color: #f3f4f6;
         }
 
         /* DIVISIONES */
-        body.dark-mode .border,
-        body.dark-mode .border-top,
-        body.dark-mode .border-bottom,
-        body.dark-mode .border-start,
-        body.dark-mode .border-end {
+        body-dark-mode .border,
+        body-dark-mode .border-top,
+        body-dark-mode .border-bottom,
+        body-dark-mode .border-start,
+        body-dark-mode .border-end {
             border-color: #4b5563 !important;
         }
 
-        body.dark-mode hr {
+        body-dark-mode hr {
             border-top-color: #4b5563;
         }
 
         /* BOTONES */
-        body.dark-mode .btn-outline-primary {
+        body-dark-mode .btn-outline-primary {
             border-color: #60a5fa;
             color: #bfdbfe;
         }
 
-        body.dark-mode .btn-outline-danger {
+        body-dark-mode .btn-outline-danger {
             border-color: #f87171;
             color: #fecaca;
         }
 
-        body.dark-mode .btn-primary {
+        body-dark-mode .btn-primary {
             background-color: #2563eb;
             border-color: #2563eb;
         }
 
         /* ALERTAS */
-        body.dark-mode .alert {
+        body-dark-mode .alert {
             background-color: #111827;
             color: #e5e7eb;
             border-color: #374151;
         }
 
         /* INPUTS */
-        body.dark-mode .form-control,
-        body.dark-mode .form-select {
+        body-dark-mode .form-control,
+        body-dark-mode .form-select {
             background-color: #020617;
             color: #e5e7eb;
             border-color: #374151;
         }
 
-        body.dark-mode .form-control::placeholder {
+        body-dark-mode .form-control::placeholder {
             color: #9ca3af;
         }
 
-                /* SOLUCIÓN PARA SVG GIGANTE - Forzar tamaño de flechas */
+        /* SOLUCIÓN PARA SVG GIGANTE */
         svg.w-5.h-5 {
             width: 20px !important;
             height: 20px !important;
-            min-width: 20px !important;
-            min-height: 20px !important;
-            max-width: 20px !important;
-            max-height: 20px !important;
-        }
-
-        /* Específico para botones de paginación */
-        a.relative.inline-flex.items-center.px-2.py-2.text-sm svg {
-            width: 20px !important;
-            height: 20px !important;
-            flex-shrink: 0;
-        }
-
-        /* BADGES */
-        body.dark-mode .badge.bg-light,
-        body.dark-mode .badge.bg-white {
-            background-color: #374151 !important;
-            color: #e5e7eb !important;
-        /* Opción activa en el menú */
-        .nav-link.active {
-            font-weight: 800 !important;
-            color: #1e3a8a !important;
         }
     </style>
 </head>
 <body>
 
-<header class="app-header text-white py-2 mb-3">
-    <div class="container-fluid px-3">
-        <h6 class="m-0">
-            Proyecto Final - Sistema de Gestión de Soporte Técnico Grupo 3
-        </h6>
-    </div>
-</header>
-
-{{-- NAVBAR PRINCIPAL --}}
-<nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm mb-4">
+{{-- NAVBAR PRINCIPAL (NO SE MUESTRA EN LOGIN) --}}
+@if (!request()->routeIs('login'))
+<nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm mb-4 navbar-custom">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{{ route('tickets.index') }}">
-            Sistema de Tickets
+
+        {{-- Marca (por ahora vacía, por si luego agregamos logo) --}}
+        <a class="navbar-brand me-3" href="{{ route('tickets.index') }}">
         </a>
-
-
-
 
         {{-- Botón modo móvil --}}
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -214,24 +211,26 @@
             {{-- Menú izquierdo --}}
             <ul class="navbar-nav me-auto">
 
-                {{-- Dashboard --}}
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('dashboard.index') ? 'active' : '' }}"
-                       href="{{ route('dashboard.index') }}">
-                        Dashboard
-                    </a>
-                </li>
-
-                {{-- Tickets --}}
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('tickets.*') ? 'active' : '' }}"
-                       href="{{ route('tickets.index') }}">
-                        Tickets
-                    </a>
-                </li>
-
-                {{-- Usuarios (solo Manager) --}}
                 @auth
+                    {{-- Dashboard solo para Manager --}}
+                    @if(auth()->user()->isManager())
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('dashboard.index') ? 'active' : '' }}"
+                               href="{{ route('dashboard.index') }}">
+                                Dashboard
+                            </a>
+                        </li>
+                    @endif
+
+                    {{-- Tickets (para todos los roles autenticados) --}}
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('tickets.*') ? 'active' : '' }}"
+                           href="{{ route('tickets.index') }}">
+                            Tickets
+                        </a>
+                    </li>
+
+                    {{-- Usuarios (solo Manager) --}}
                     @if(auth()->user()->isManager())
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}"
@@ -239,27 +238,21 @@
                                 Usuarios
                             </a>
                         </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('dashboard.index') ? 'active' : '' }}"
-                               href="{{ route('dashboard.index') }}">
-                                Panel de Control
-                            </a>
-                        </li>
                     @endif
                 @endauth
+
             </ul>
 
-            {{-- Menú derecho: usuario + sesión --}}
-            <ul class="navbar-nav">
+            {{-- Bloque derecho: usuario + tema + logout --}}
+            <div class="d-flex align-items-center gap-3">
 
                 @guest
                     @if(!request()->routeIs('login'))
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">Iniciar sesión</a>
-                        </li>
+                        <a class="btn btn-sm btn-outline-primary rounded-pill px-3"
+                           href="{{ route('login') }}">
+                            Iniciar sesión
+                        </a>
                     @endif
-
                 @else
                     @php
                         $rol = match(auth()->user()->role) {
@@ -269,33 +262,34 @@
                         };
                     @endphp
 
-                    <li class="nav-item d-flex align-items-center me-3">
-                    <li class="nav-item d-flex align-items-center me-2">
-                        <span class="nav-link">
-                            {{ auth()->user()->name }} - {{ $rol }}
-                        </span>
-                    </li>
+                    <div class="navbar-user-meta text-end me-1">
+                        <div class="name">
+                            {{ auth()->user()->name }}
+                        </div>
+                        <div class="role">
+                            {{ $rol }}
+                        </div>
+                    </div>
 
-                    <li class="nav-item d-flex align-items-center me-3">
-                        <button type="button" id="themeToggle"
-                                class="btn btn-outline-secondary btn-sm">
-                            🌙 Modo oscuro
+                    <button type="button" id="themeToggle"
+                            class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                        🌙 Modo oscuro
+                    </button>
+
+                    <form method="POST" action="{{ route('logout') }}" class="m-0 p-0">
+                        @csrf
+                        <button class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                            Cerrar sesión
                         </button>
-                    </li>
-
-                    <li class="nav-item">
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button class="btn btn-outline-danger btn-sm">Cerrar sesión</button>
-                        </form>
-                    </li>
-
+                    </form>
                 @endguest
-            </ul>
+
+            </div>
 
         </div>
     </div>
 </nav>
+@endif
 
 <div class="container-fluid px-3">
     @if(session('ok'))
@@ -321,17 +315,19 @@
         const body = document.body;
         const toggleBtn = document.getElementById('themeToggle');
 
-        const savedTheme = localStorage.getItem(STORAGE_KEY);
-        if (savedTheme === 'dark') {
-            body.classList.add('dark-mode');
-            toggleBtn.innerHTML = '☀️ Modo claro';
-        }
+        if (toggleBtn) {
+            const savedTheme = localStorage.getItem(STORAGE_KEY);
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+                toggleBtn.innerHTML = '☀️ Modo claro';
+            }
 
-        toggleBtn.addEventListener('click', function () {
-            const isDark = body.classList.toggle('dark-mode');
-            localStorage.setItem(STORAGE_KEY, isDark ? 'dark' : 'light');
-            this.innerHTML = isDark ? '☀️ Modo claro' : '🌙 Modo oscuro';
-        });
+            toggleBtn.addEventListener('click', function () {
+                const isDark = body.classList.toggle('dark-mode');
+                localStorage.setItem(STORAGE_KEY, isDark ? 'dark' : 'light');
+                this.innerHTML = isDark ? '☀️ Modo claro' : '🌙 Modo oscuro';
+            });
+        }
     })();
 </script>
 
