@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    
+
     {{-- Token CSRF para peticiones AJAX --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -35,6 +35,105 @@
 
         header.app-header {
             background: linear-gradient(90deg, #0d6efd, #0b5ed7);
+        }
+
+        /* ====== MODO OSCURO ====== */
+
+        body.dark-mode {
+            background-color: #111827;
+            color: #e5e7eb;
+        }
+
+        body.dark-mode header.app-header {
+            background: linear-gradient(90deg, #020617, #111827);
+        }
+
+        body.dark-mode .navbar,
+        body.dark-mode .navbar.bg-white {
+            background-color: #020617 !important;
+            color: #e5e7eb;
+            border-color: #1f2937 !important;
+        }
+
+        body.dark-mode .navbar .navbar-brand {
+            color: #e5e7eb;
+        }
+
+        body.dark-mode .nav-link {
+            color: #e5e7eb;
+        }
+
+        body.dark-mode .nav-link.active {
+            color: #0d6efd !important;
+        }
+
+        body.dark-mode .dropdown-menu {
+            background-color: #020617;
+            color: #e5e7eb;
+            border-color: #1f2937;
+        }
+
+        body.dark-mode .dropdown-item {
+            color: #e5e7eb;
+        }
+
+        body.dark-mode .dropdown-item:hover {
+            background-color: #111827;
+        }
+
+        body.dark-mode .card,
+        body.dark-mode .table,
+        body.dark-mode .modal-content {
+            background-color: #111827;
+            color: #e5e7eb;
+            border-color: #1f2937;
+        }
+
+        body.dark-mode .table thead {
+            background-color: #020617;
+        }
+
+        body.dark-mode .table-striped > tbody > tr:nth-of-type(odd) > * {
+            --bs-table-accent-bg: #020617;
+            color: #e5e7eb;
+        }
+
+        body.dark-mode .btn-outline-primary {
+            border-color: #60a5fa;
+            color: #bfdbfe;
+        }
+
+        body.dark-mode .btn-outline-danger {
+            border-color: #f87171;
+            color: #fecaca;
+        }
+
+        body.dark-mode .btn-primary {
+            background-color: #2563eb;
+            border-color: #2563eb;
+        }
+
+        body.dark-mode .alert {
+            background-color: #111827;
+            color: #e5e7eb;
+            border-color: #374151;
+        }
+
+        body.dark-mode .form-control,
+        body.dark-mode .form-select {
+            background-color: #020617;
+            color: #e5e7eb;
+            border-color: #374151;
+        }
+
+        body.dark-mode .form-control::placeholder {
+            color: #9ca3af;
+        }
+
+        body.dark-mode .badge.bg-light,
+        body.dark-mode .badge.bg-white {
+            background-color: #374151 !important;
+            color: #e5e7eb;
         }
     </style>
 </head>
@@ -109,6 +208,15 @@
                         </span>
                     </li>
 
+                    {{-- Botón modo oscuro / claro --}}
+                    <li class="nav-item d-flex align-items-center me-2">
+                        <button type="button"
+                                id="themeToggle"
+                                class="btn btn-outline-secondary btn-sm">
+                            🌙 Modo oscuro
+                        </button>
+                    </li>
+
                     <li class="nav-item">
                         <form method="POST" action="{{ route('logout') }}" class="d-inline">
                             @csrf
@@ -140,6 +248,32 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    (function () {
+        const STORAGE_KEY = 'ticket_system_theme';
+        const body = document.body;
+        const toggleBtn = document.getElementById('themeToggle');
+
+        // Cargar preferencia guardada
+        const savedTheme = localStorage.getItem(STORAGE_KEY);
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+            if (toggleBtn) {
+                toggleBtn.innerHTML = '☀️ Modo claro';
+            }
+        }
+
+        // Escuchar click en el botón
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', function () {
+                const isDark = body.classList.toggle('dark-mode');
+                localStorage.setItem(STORAGE_KEY, isDark ? 'dark' : 'light');
+                this.innerHTML = isDark ? '☀️ Modo claro' : '🌙 Modo oscuro';
+            });
+        }
+    })();
+</script>
 
 @stack('scripts')
 </body>
