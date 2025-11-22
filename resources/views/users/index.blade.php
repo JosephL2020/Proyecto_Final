@@ -14,6 +14,145 @@
     $employeeCount  = User::where('role', 'Empleado')->count();
 @endphp
 
+<style>
+    /* ====== ESTILOS BASE ====== */
+
+    .role-badge {
+        border-radius: 999px;
+        font-size: .75rem;
+        padding: .2rem .6rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 86px;
+    }
+    .role-manager {
+        background-color: #e0f2fe;
+        color: #0369a1;
+    }
+    .role-it {
+        background-color: #f5e0ff;
+        color: #6b21a8;
+    }
+    .role-employee {
+        background-color: #e5e7eb;
+        color: #374151;
+    }
+
+    .users-card {
+        border: 0;
+        border-radius: .75rem;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
+        overflow: hidden;
+        background: #ffffff;
+    }
+
+    .users-card-body {
+        padding: 0;
+    }
+
+    .users-card-footer {
+        background: #f9fafb;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .users-table {
+        margin-bottom: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .users-thead th {
+        font-size: .78rem;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        padding-top: .9rem;
+        padding-bottom: .9rem;
+        border-bottom: 1px solid #e5e7eb;
+        background: #f9fafb;
+        color: #6b7280;
+        white-space: nowrap;
+    }
+
+    .users-row td {
+        padding-top: .9rem;
+        padding-bottom: .9rem;
+        border-top: 1px solid #e5e7eb;
+        background: #ffffff;
+    }
+
+    .users-row:first-child td {
+        border-top: none;
+    }
+
+    .users-row:hover td {
+        background: #f3f4f6;
+    }
+
+    .inactive-row {
+        opacity: .8;
+    }
+
+    /* ====== MODO OSCURO ====== */
+
+    body.dark-mode .users-card {
+        background: #020617;
+        border: 1px solid #111827;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.65);
+    }
+
+    body.dark-mode .users-card-footer {
+        background: #020617;
+        border-top-color: #1f2937;
+        color: #9ca3af;
+    }
+
+    body.dark-mode .users-table,
+    body.dark-mode .users-table thead,
+    body.dark-mode .users-table tbody,
+    body.dark-mode .users-table tr,
+    body.dark-mode .users-table th,
+    body.dark-mode .users-table td {
+        background-color: #020617 !important;
+        border-color: #1f2937 !important;
+        color: #e5e7eb !important;
+    }
+
+    body.dark-mode .users-thead th {
+        background: #020617 !important;
+        color: #9ca3af !important;
+    }
+
+    body.dark-mode .users-row td {
+        background-color: #020617 !important;
+    }
+
+    body.dark-mode .users-row:hover td {
+        background-color: #0f172a !important;
+    }
+
+    body.dark-mode .inactive-row td {
+        background-color: #111827 !important;
+        color: #d1d5db !important;
+    }
+
+    /* Que los textos “secundarios” no se pierdan */
+    body.dark-mode .users-table .text-muted {
+        color: #9ca3af !important;
+    }
+
+    /* Botones mantienen buen contraste */
+    body.dark-mode .btn-outline-primary {
+        border-color: #3b82f6;
+        color: #bfdbfe;
+    }
+    body.dark-mode .btn-outline-primary:hover {
+        background-color: #1d4ed8;
+        color: #e5e7eb;
+    }
+</style>
+
 <div class="d-flex justify-content-between align-items-center mb-3">
     <div>
         <h3 class="mb-1">Gestión de usuarios</h3>
@@ -96,31 +235,10 @@
     </div>
 </form>
 
-<style>
-    .role-badge {
-        border-radius: 999px;
-        font-size: .75rem;
-        padding: .2rem .6rem;
-        font-weight: 500;
-    }
-    .role-manager {
-        background-color: #e0f2fe;
-        color: #0369a1;
-    }
-    .role-it {
-        background-color: #f5e0ff;
-        color: #6b21a8;
-    }
-    .role-employee {
-        background-color: #e5e7eb;
-        color: #374151;
-    }
-</style>
-
-<div class="card">
-    <div class="card-body p-0">
-        <table class="table table-hover align-middle mb-0">
-            <thead class="table-light">
+<div class="card users-card">
+    <div class="card-body users-card-body">
+        <table class="table users-table align-middle mb-0">
+            <thead class="users-thead">
                 <tr>
                     <th>Usuario</th>
                     <th>Correo</th>
@@ -152,7 +270,7 @@
                             ->count();
                     @endphp
 
-                    <tr class="{{ $u->is_active ? '' : 'table-secondary' }}">
+                    <tr class="users-row {{ $u->is_active ? '' : 'inactive-row' }}">
                         <td>
                             <div class="fw-semibold">{{ $u->name }}</div>
                             <div class="small text-muted">
@@ -210,8 +328,9 @@
         </table>
     </div>
 
-    <div class="card-footer">
+    <div class="card-footer users-card-footer">
         {{ $users->links() }}
     </div>
 </div>
+
 @endsection
