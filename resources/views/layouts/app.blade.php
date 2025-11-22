@@ -4,15 +4,12 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-    {{-- Token CSRF para peticiones AJAX --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>Sistema de Gestión de Tickets - Proyecto Final</title>
 
-    {{-- Bootstrap 5 --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    {{-- Bootstrap Icons --}}
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
@@ -20,12 +17,6 @@
         body {
             background-color: #f3f4f6;
             transition: background-color 0.3s, color 0.3s;
-        }
-
-        .star-select {
-            cursor: pointer;
-            user-select: none;
-            line-height: 1;
         }
 
         .navbar-brand {
@@ -37,7 +28,9 @@
             background: linear-gradient(90deg, #0d6efd, #0b5ed7);
         }
 
-        /* ====== MODO OSCURO ====== */
+        /* ============================
+               MODO OSCURO
+        ============================= */
 
         body.dark-mode {
             background-color: #111827;
@@ -70,34 +63,61 @@
         body.dark-mode .dropdown-menu {
             background-color: #020617;
             color: #e5e7eb;
-            border-color: #1f2937;
         }
 
         body.dark-mode .dropdown-item {
             color: #e5e7eb;
         }
 
-        body.dark-mode .dropdown-item:hover {
-            background-color: #111827;
-        }
-
+        /* TARJETAS / PANEL DE CONTROL */
         body.dark-mode .card,
+        body.dark-mode .card-body,
+        body.dark-mode .card-header,
         body.dark-mode .table,
         body.dark-mode .modal-content {
-            background-color: #111827;
-            color: #e5e7eb;
-            border-color: #1f2937;
+            background-color: #111827 !important;
+            color: #f9fafb !important;
+            border-color: #4b5563 !important;
         }
 
+        body.dark-mode h1,
+        body.dark-mode h2,
+        body.dark-mode h3,
+        body.dark-mode h4,
+        body.dark-mode h5,
+        body.dark-mode h6 {
+            color: #f9fafb !important;
+        }
+
+        body.dark-mode .text-muted {
+            color: #d1d5db !important;
+        }
+
+        /* TABLAS */
         body.dark-mode .table thead {
             background-color: #020617;
+            color: #e5e7eb;
         }
 
         body.dark-mode .table-striped > tbody > tr:nth-of-type(odd) > * {
-            --bs-table-accent-bg: #020617;
-            color: #e5e7eb;
+            --bs-table-accent-bg: #1f2937;
+            color: #f3f4f6;
         }
 
+        /* DIVISIONES */
+        body.dark-mode .border,
+        body.dark-mode .border-top,
+        body.dark-mode .border-bottom,
+        body.dark-mode .border-start,
+        body.dark-mode .border-end {
+            border-color: #4b5563 !important;
+        }
+
+        body.dark-mode hr {
+            border-top-color: #4b5563;
+        }
+
+        /* BOTONES */
         body.dark-mode .btn-outline-primary {
             border-color: #60a5fa;
             color: #bfdbfe;
@@ -113,12 +133,14 @@
             border-color: #2563eb;
         }
 
+        /* ALERTAS */
         body.dark-mode .alert {
             background-color: #111827;
             color: #e5e7eb;
             border-color: #374151;
         }
 
+        /* INPUTS */
         body.dark-mode .form-control,
         body.dark-mode .form-select {
             background-color: #020617;
@@ -130,10 +152,11 @@
             color: #9ca3af;
         }
 
+        /* BADGES */
         body.dark-mode .badge.bg-light,
         body.dark-mode .badge.bg-white {
             background-color: #374151 !important;
-            color: #e5e7eb;
+            color: #e5e7eb !important;
         }
     </style>
 </head>
@@ -152,13 +175,14 @@
         <a class="navbar-brand" href="{{ route('tickets.index') }}">
             Sistema de Tickets
         </a>
+
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarNav" aria-controls="navbarNav"
-                aria-expanded="false" aria-label="Toggle navigation">
+                data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
+
             <ul class="navbar-nav me-auto">
                 @auth
                     <li class="nav-item">
@@ -175,6 +199,7 @@
                                 Usuarios
                             </a>
                         </li>
+
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('dashboard.index') ? 'active' : '' }}"
                                href="{{ route('dashboard.index') }}">
@@ -189,11 +214,10 @@
                 @guest
                     @if(!request()->routeIs('login'))
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">
-                                Iniciar sesión
-                            </a>
+                            <a class="nav-link" href="{{ route('login') }}">Iniciar sesión</a>
                         </li>
                     @endif
+
                 @else
                     @php
                         $rol = match(auth()->user()->role) {
@@ -202,44 +226,43 @@
                             default   => 'Empleado'
                         };
                     @endphp
-                    <li class="nav-item d-flex align-items-center me-2">
+
+                    <li class="nav-item d-flex align-items-center me-3">
                         <span class="nav-link">
                             {{ auth()->user()->name }} - {{ $rol }}
                         </span>
                     </li>
 
-                    {{-- Botón modo oscuro / claro --}}
-                    <li class="nav-item d-flex align-items-center me-2">
-                        <button type="button"
-                                id="themeToggle"
+                    <li class="nav-item d-flex align-items-center me-3">
+                        <button type="button" id="themeToggle"
                                 class="btn btn-outline-secondary btn-sm">
                             🌙 Modo oscuro
                         </button>
                     </li>
 
                     <li class="nav-item">
-                        <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                        <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button class="btn btn-outline-danger btn-sm">
-                                Cerrar sesión
-                            </button>
+                            <button class="btn btn-outline-danger btn-sm">Cerrar sesión</button>
                         </form>
                     </li>
+
                 @endguest
             </ul>
+
         </div>
     </div>
 </nav>
 
 <div class="container-fluid px-3">
     @if(session('ok'))
-        <div class="alert alert-success border-0 shadow-sm">
+        <div class="alert alert-success shadow-sm">
             {{ session('ok') }}
         </div>
     @endif
 
     @if(session('error'))
-        <div class="alert alert-danger border-0 shadow-sm">
+        <div class="alert alert-danger shadow-sm">
             {{ session('error') }}
         </div>
     @endif
@@ -255,23 +278,17 @@
         const body = document.body;
         const toggleBtn = document.getElementById('themeToggle');
 
-        // Cargar preferencia guardada
         const savedTheme = localStorage.getItem(STORAGE_KEY);
         if (savedTheme === 'dark') {
             body.classList.add('dark-mode');
-            if (toggleBtn) {
-                toggleBtn.innerHTML = '☀️ Modo claro';
-            }
+            toggleBtn.innerHTML = '☀️ Modo claro';
         }
 
-        // Escuchar click en el botón
-        if (toggleBtn) {
-            toggleBtn.addEventListener('click', function () {
-                const isDark = body.classList.toggle('dark-mode');
-                localStorage.setItem(STORAGE_KEY, isDark ? 'dark' : 'light');
-                this.innerHTML = isDark ? '☀️ Modo claro' : '🌙 Modo oscuro';
-            });
-        }
+        toggleBtn.addEventListener('click', function () {
+            const isDark = body.classList.toggle('dark-mode');
+            localStorage.setItem(STORAGE_KEY, isDark ? 'dark' : 'light');
+            this.innerHTML = isDark ? '☀️ Modo claro' : '🌙 Modo oscuro';
+        });
     })();
 </script>
 
