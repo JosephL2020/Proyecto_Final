@@ -6,6 +6,8 @@ use App\Models\{Ticket, TicketComment};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
+// Commit Test - Gino
+
 class TicketCommentController extends Controller
 {
     public function store(Request $request, Ticket $ticket){
