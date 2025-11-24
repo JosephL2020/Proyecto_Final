@@ -186,6 +186,27 @@
             width: 20px !important;
             height: 20px !important;
         }
+
+            /* solo una paginación según tamaño */
+        .flex.justify-between.flex-1.sm\:hidden {
+            display: none; /* Oculta celular en desktop */
+        }
+
+        .hidden.sm\:flex-1.sm\:flex.sm\:items-center.sm\:justify-between {
+            display: flex; /* Muestra desktop en desktop */
+        }
+
+        /* En celular */
+        @media (max-width: 640px) {
+            .flex.justify-between.flex-1.sm\:hidden {
+                display: flex !important; /* Muestra cel */
+            }
+            
+            .hidden.sm\:flex-1.sm\:flex.sm\:items-center.sm\:justify-between {
+                display: none !important; /* Oculta desktop */
+            }
+        }
+
     </style>
 </head>
 <body>

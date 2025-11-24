@@ -115,12 +115,12 @@
         <div class="col-6 col-md-4 col-xl-2">
             <a href="{{ route('tickets.index') }}" class="kpi-link">
                 <div class="card kpi-card text-white h-100">
-                    <div class="card-body py-2 px-3"
+                    <div class="card-body py-3 px-3"
                          style="background: linear-gradient(135deg, #2563eb, #1d4ed8);">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="small text-white-50 mb-1">Total de tickets</div>
-                                <div class="h4 mb-0">{{ $stats['total'] ?? 0 }}</div>
+                                <div class="h3 mb-0">{{ $stats['total'] ?? 0 }}</div>
                             </div>
                             <i class="bi bi-collection-play h3 mb-0 kpi-icon"></i>
                         </div>
@@ -133,12 +133,12 @@
         <div class="col-6 col-md-4 col-xl-2">
             <a href="{{ route('tickets.index', ['status' => 'open']) }}" class="kpi-link">
                 <div class="card kpi-card text-white h-100">
-                    <div class="card-body py-2 px-3"
+                    <div class="card-body py-3 px-3"
                          style="background: linear-gradient(135deg, #0ea5e9, #0284c7);">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="small text-white-50 mb-1">Abiertos</div>
-                                <div class="h4 mb-0">{{ $stats['open'] ?? 0 }}</div>
+                                <div class="h3 mb-0">{{ $stats['open'] ?? 0 }}</div>
                             </div>
                             <i class="bi bi-envelope-open h3 mb-0 kpi-icon"></i>
                         </div>
@@ -151,12 +151,12 @@
         <div class="col-6 col-md-4 col-xl-2">
             <a href="{{ route('tickets.index', ['status' => 'assigned']) }}" class="kpi-link">
                 <div class="card kpi-card text-dark h-100">
-                    <div class="card-body py-2 px-3"
+                    <div class="card-body py-3 px-3"
                          style="background: linear-gradient(135deg, #facc15, #eab308);">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="small text-dark mb-1">Asignados</div>
-                                <div class="h4 mb-0">{{ $stats['assigned'] ?? 0 }}</div>
+                                <div class="h3 mb-0">{{ $stats['assigned'] ?? 0 }}</div>
                             </div>
                             <i class="bi bi-person-workspace h3 mb-0 kpi-icon"></i>
                         </div>
@@ -169,12 +169,12 @@
         <div class="col-6 col-md-4 col-xl-2">
             <a href="{{ route('tickets.index', ['status' => 'in_progress']) }}" class="kpi-link">
                 <div class="card kpi-card text-white h-100">
-                    <div class="card-body py-2 px-3"
+                    <div class="card-body py-3 px-3"
                          style="background: linear-gradient(135deg, #6b7280, #4b5563);">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="small text-white-50 mb-1">En progreso</div>
-                                <div class="h4 mb-0">{{ $stats['in_progress'] ?? 0 }}</div>
+                                <div class="h3 mb-0">{{ $stats['in_progress'] ?? 0 }}</div>
                             </div>
                             <i class="bi bi-arrow-repeat h3 mb-0 kpi-icon"></i>
                         </div>
@@ -187,12 +187,12 @@
         <div class="col-6 col-md-4 col-xl-2">
             <a href="{{ route('tickets.index', ['status' => 'resolved']) }}" class="kpi-link">
                 <div class="card kpi-card text-white h-100">
-                    <div class="card-body py-2 px-3"
+                    <div class="card-body py-3 px-3"
                          style="background: linear-gradient(135deg, #22c55e, #16a34a);">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="small text-white-50 mb-1">Resueltos</div>
-                                <div class="h4 mb-0">{{ $stats['resolved'] ?? 0 }}</div>
+                                <div class="h3 mb-0">{{ $stats['resolved'] ?? 0 }}</div>
                             </div>
                             <i class="bi bi-check2-circle h3 mb-0 kpi-icon"></i>
                         </div>
@@ -205,12 +205,12 @@
         <div class="col-6 col-md-4 col-xl-2">
             <a href="{{ route('tickets.index', ['status' => 'closed']) }}" class="kpi-link">
                 <div class="card kpi-card text-white h-100">
-                    <div class="card-body py-2 px-3"
+                    <div class="card-body py-3 px-3"
                          style="background: linear-gradient(135deg, #111827, #020617);">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="small text-white-50 mb-1">Cerrados</div>
-                                <div class="h4 mb-0">{{ $stats['closed'] ?? 0 }}</div>
+                                <div class="h3 mb-0">{{ $stats['closed'] ?? 0 }}</div>
                             </div>
                             <i class="bi bi-lock-fill h3 mb-0 kpi-icon"></i>
                         </div>
@@ -322,22 +322,22 @@
     {{-- FILA 3: Gráficas --}}
     <div class="row g-3 mb-3">
         <div class="col-lg-8">
-            <div class="card border-0 shadow-sm card-compact">
+        <div class="card border-0 shadow-sm card-compact h-100">
                 <div class="card-body">
                     <div class="mb-2">
                         <span class="section-title">Tendencia de tickets (últimos 14 días)</span>
                     </div>
-                    <canvas id="ticketsDailyChart" height="80"></canvas>
+                    <canvas id="ticketsDailyChart" height="135"></canvas>
                 </div>
             </div>
         </div>
         <div class="col-lg-4">
-            <div class="card border-0 shadow-sm card-compact">
+        <div class="card border-0 shadow-sm card-compact h-100">
                 <div class="card-body">
                     <div class="mb-2">
                         <span class="section-title">Distribución por categoría</span>
                     </div>
-                    <canvas id="ticketsCategoryChart" height="180"></canvas>
+                    <canvas id="ticketsCategoryChart" height="40"></canvas>
                 </div>
             </div>
         </div>
