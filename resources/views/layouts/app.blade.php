@@ -98,86 +98,139 @@
             color: #e5e7eb;
         }
 
+        /* TABLAS - dark mode */
+        body.dark-mode .table {
+            --bs-table-bg: transparent;
+            --bs-table-color: #f9fafb; 
+            --bs-table-border-color: #4b5563;
+        }
+
+        body.dark-mode .table thead {
+            background-color: #1f2937 !important; 
+        }
+
+        body.dark-mode .table th {
+            background-color: #1f2937 !important;
+            color: #f9fafb !important; 
+            border-bottom: 2px solid #374151 !important;
+            font-weight: 600;
+        }
+
+        body.dark-mode .table td {
+            color: #e5e7eb !important; 
+            border-color: #374151 !important;
+            background-color: #111827 !important;
+        }
+
+        body.dark-mode .table-striped > tbody > tr:nth-of-type(odd) > * {
+            --bs-table-accent-bg: #1a2231 !important; 
+            color: #e5e7eb !important;
+        }
+
+        body.dark-mode .table-striped > tbody > tr:nth-of-type(even) > * {
+            background-color: #111827 !important; 
+            color: #e5e7eb !important;
+        }
+
+        body.dark-mode .table-hover tbody tr:hover td {
+            background-color: #374151 !important; 
+            color: #ffffff !important;
+        }
+
+        /* Textos específicos en tablas */
+        body.dark-mode .table .text-muted {
+            color: #9ca3af !important;
+        }
+
+        body.dark-mode .table a {
+            color: #60a5fa !important; 
+        }
+
+        body.dark-mode .table a:hover {
+            color: #93c5fd !important;
+        }
+                
+
         /* TARJETAS / PANEL DE CONTROL */
         body.dark-mode .card,
         body.dark-mode .card-body,
-        body-dark-mode .card-header,
-        body-dark-mode .table,
-        body-dark-mode .modal-content {
+        body.dark-mode .card-header,
+        body.dark-mode .table,
+        body.dark-mode .modal-content {
             background-color: #111827 !important;
             color: #f9fafb !important;
             border-color: #4b5563 !important;
         }
 
-        body.dark-mode h1,
-        body-dark-mode h2,
-        body-dark-mode h3,
-        body-dark-mode h4,
-        body-dark-mode h5,
-        body-dark-mode h6 {
+       body.dark-mode h1,
+        body.dark-mode h2,
+        body.dark-mode h3,
+        body.dark-mode h4,
+        body.dark-mode h5,
+        body.dark-mode h6 {
             color: #f9fafb !important;
         }
 
-        body-dark-mode .text-muted {
+        body.dark-mode .text-muted {
             color: #d1d5db !important;
         }
 
         /* TABLAS */
-        body-dark-mode .table thead {
+        body.dark-mode .table thead {
             background-color: #020617;
             color: #e5e7eb;
         }
 
-        body-dark-mode .table-striped > tbody > tr:nth-of-type(odd) > * {
+        body.dark-mode .table-striped > tbody > tr:nth-of-type(odd) > * {
             --bs-table-accent-bg: #1f2937;
             color: #f3f4f6;
         }
 
         /* DIVISIONES */
-        body-dark-mode .border,
-        body-dark-mode .border-top,
-        body-dark-mode .border-bottom,
-        body-dark-mode .border-start,
-        body-dark-mode .border-end {
+        body.dark-mode .border,
+        body.dark-mode .border-top,
+        body.dark-mode .border-bottom,
+        body.dark-mode .border-start,
+        body.dark-mode .border-end {
             border-color: #4b5563 !important;
         }
 
-        body-dark-mode hr {
+        body.dark-mode hr {
             border-top-color: #4b5563;
         }
 
         /* BOTONES */
-        body-dark-mode .btn-outline-primary {
+        body.dark-mode .btn-outline-primary {
             border-color: #60a5fa;
             color: #bfdbfe;
         }
 
-        body-dark-mode .btn-outline-danger {
+        body.dark-mode .btn-outline-danger {
             border-color: #f87171;
             color: #fecaca;
         }
 
-        body-dark-mode .btn-primary {
+        body.dark-mode .btn-primary {
             background-color: #2563eb;
             border-color: #2563eb;
         }
 
         /* ALERTAS */
-        body-dark-mode .alert {
+        body.dark-mode .alert {
             background-color: #111827;
             color: #e5e7eb;
             border-color: #374151;
         }
 
         /* INPUTS */
-        body-dark-mode .form-control,
-        body-dark-mode .form-select {
+        body.dark-mode .form-control,
+        body.dark-mode .form-select {
             background-color: #020617;
             color: #e5e7eb;
             border-color: #374151;
         }
 
-        body-dark-mode .form-control::placeholder {
+        body.dark-mode .form-control::placeholder {
             color: #9ca3af;
         }
 

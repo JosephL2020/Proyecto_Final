@@ -52,6 +52,56 @@
             font-weight: 500;
             border-radius: 999px;
         }
+
+        /* MEJORAS PARA TABLA DE RENDIMIENTO IT */
+.performance-table {
+    font-size: 0.82rem;
+}
+
+.performance-table th {
+    text-align: center;
+    white-space: nowrap;
+    padding: 0.5rem 0.4rem;
+    font-weight: 600;
+}
+
+.performance-table td {
+    text-align: center;
+    padding: 0.5rem 0.4rem;
+    vertical-align: middle;
+}
+
+.performance-table .user-name {
+    text-align: left;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.performance-table .rating-stars {
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+}
+
+.performance-table .stat-number {
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+/* Header compacto y centrado */
+.performance-table thead th {
+    background-color: #f8fafc;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+/* Modo oscuro */
+body.dark-mode .performance-table thead th {
+    background-color: #1e293b;
+    border-bottom-color: #374151;
+}
+
+body.dark-mode .performance-table .stat-number {
+    color: #f1f5f9;
+}
     </style>
 
     {{-- Encabezado --}}
@@ -343,88 +393,113 @@
         </div>
     </div>
 
-    {{-- FILA 4: Rendimiento por soporte IT + Top categorías --}}
-    <div class="row g-3">
-        {{-- Tabla IT --}}
-        <div class="col-lg-8">
-            <div class="mb-1">
-                <span class="section-title">Rendimiento por soporte (IT)</span>
-            </div>
-            <div class="card border-0 shadow-sm card-compact">
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-sm align-middle mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Soporte</th>
-                                    <th>Abiertos</th>
-                                    <th>Asignados</th>
-                                    <th>En prog.</th>
-                                    <th>Resueltos</th>
-                                    <th>Cerrados</th>
-                                    <th>Cancelados</th>
-                                    <th>Promedio ★</th>
-                                    <th># Calif.</th>
-                                    <th>Prom. resolución (h)</th>
-                                    <th># Resueltos</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($its as $it)
-                                    @php
-                                        $s = $itStats->get($it->id);
-                                        $avg = (float)($s->avg_rating ?? 0);
-                                        $userTime = $perUserTimeKpis[$it->id] ?? null;
-                                    @endphp
-                                    <tr>
-                                        <td>{{ $it->name }}</td>
-                                        <td>{{ $s->open_cnt ?? 0 }}</td>
-                                        <td>{{ $s->assigned_cnt ?? 0 }}</td>
-                                        <td>{{ $s->in_progress_cnt ?? 0 }}</td>
-                                        <td>{{ $s->resolved_cnt ?? 0 }}</td>
-                                        <td>{{ $s->closed_cnt ?? 0 }}</td>
-                                        <td>{{ $s->cancelled_cnt ?? 0 }}</td>
-                                        <td>
-                                            @if($avg > 0)
-                                                <span class="me-1">{{ number_format($avg, 2) }}</span>
-                                                @for($i = 1; $i <= 5; $i++)
-                                                    <span class="text-warning">
-                                                        @if($i <= round($avg)) ★ @else ☆ @endif
-                                                    </span>
-                                                @endfor
-                                            @else
-                                                <span class="text-muted">—</span>
-                                            @endif
-                                        </td>
-                                        <td>{{ $s->rated_count ?? 0 }}</td>
 
-                                        {{-- Promedio de resolución por usuario --}}
-                                        <td>
-                                            @if($userTime && $userTime['avg_resolution_hours'] !== null)
-                                                {{ $userTime['avg_resolution_hours'] }}
-                                            @else
-                                                <span class="text-muted">—</span>
-                                            @endif
-                                        </td>
-
-                                        {{-- Tickets resueltos por usuario --}}
-                                        <td>
-                                            {{ $userTime['resolved_count'] ?? 0 }}
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="11" class="text-center text-muted py-3">
-                                            No hay usuarios IT configurados.
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+{{-- FILA 4: Rendimiento por soporte IT + Top categorías --}}
+<div class="row g-3">
+    {{-- Tabla IT MEJORADA --}}
+    <div class="col-lg-8">
+        <div class="mb-1">
+            <span class="section-title">Rendimiento por soporte (IT)</span>
         </div>
+        <div class="card border-0 shadow-sm card-compact">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table performance-table table-hover table-sm align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="text-start">Soporte</th>
+                                <th>Abiertos</th>
+                                <th>Asignados</th>
+                                <th>En prog.</th>
+                                <th>Resueltos</th>
+                                <th>Cerrados</th>
+                                <th># Calif.</th>
+                                <th>Resoluciones</th>
+                                <th>Tiempo prom.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($its as $it)
+                                @php
+                                    $s = $itStats->get($it->id);
+                                    $avg = (float)($s->avg_rating ?? 0);
+                                    $userTime = $perUserTimeKpis[$it->id] ?? null;
+                                    $totalResolved = ($s->resolved_cnt ?? 0) + ($s->closed_cnt ?? 0);
+                                @endphp
+                                <tr>
+                                    {{-- Nombre --}}
+                                    <td class="user-name">
+                                        <div class="fw-semibold">{{ $it->name }}</div>
+                                        <small class="text-muted">{{ $s->rated_count ?? 0 }} calif.</small>
+                                    </td>
+                                    
+                                    {{-- Estados --}}
+                                    <td>
+                                        <span class="stat-number">{{ $s->open_cnt ?? 0 }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="stat-number">{{ $s->assigned_cnt ?? 0 }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="stat-number">{{ $s->in_progress_cnt ?? 0 }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="stat-number text-success">{{ $s->resolved_cnt ?? 0 }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="stat-number text-secondary">{{ $s->closed_cnt ?? 0 }}</span>
+                                    </td>
+                                    
+                                    {{-- Calificación --}}
+                                    <td>
+                                        @if($avg > 0)
+                                            <div class="rating-stars text-warning mb-1">
+                                                @for($i = 1; $i <= 5; $i++)
+                                                    @if($i <= floor($avg))
+                                                        ★
+                                                    @elseif($i - 0.5 <= $avg)
+                                                        ⭐
+                                                    @else
+                                                        ☆
+                                                    @endif
+                                                @endfor
+                                            </div>
+                                            <small class="text-muted">{{ number_format($avg, 1) }}</small>
+                                        @else
+                                            <span class="text-muted small">—</span>
+                                        @endif
+                                    </td>
+                                    
+                                    {{-- Resoluciones --}}
+                                    <td>
+                                        <span class="stat-number text-primary">{{ $totalResolved }}</span>
+                                    </td>
+                                    
+                                    {{-- Tiempo promedio --}}
+                                    <td>
+                                        @if($userTime && $userTime['avg_resolution_hours'] !== null)
+                                            <span class="stat-number">{{ $userTime['avg_resolution_hours'] }}h</span>
+                                        @else
+                                            <span class="text-muted small">—</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="9" class="text-center text-muted py-3">
+                                        No hay usuarios IT configurados.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                
+           </div>
+        </div>
+    </div>
+
+   
 
         {{-- Top categorías --}}
         <div class="col-lg-4">

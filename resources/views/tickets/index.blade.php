@@ -148,6 +148,73 @@
     transition: all 0.2s ease-in-out;
     border-radius: 8px;
   }
+
+ /* PAGINACIÓN PERSONALIZADA - ESQUINA IZQUIERDA */
+  .pagination-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+  }
+
+  .pagination-top {
+      display: flex;
+      justify-content: flex-start;
+  }
+
+  .pagination-bottom {
+      display: flex;
+      justify-content: flex-start;
+  }
+
+  /* Ocultar los contenedores originales de Laravel */
+  .hidden.sm\:flex-1.sm\:flex.sm\:items-center.sm\:justify-between,
+  .flex.justify-between.flex-1.sm\:hidden {
+      display: none !important;
+  }
+
+  /* Estilos para la información de paginación */
+  .pagination-info {
+      color: #6b7280;
+      font-size: 0.875rem;
+      text-align: left;
+  }
+
+  /* SEPARAR BOTONES DE PAGINACIÓN - NUEVO */
+  .pagination .page-item {
+      margin: 0 0.4rem; /* Separación entre botones */
+  }
+
+  .pagination .page-link {
+      border-radius: 0.375rem;
+      padding: 0.5rem 0.9rem;
+      min-width: 90px;
+      text-align: center;
+      font-weight: 500;
+      transition: all 0.2s ease;
+  }
+
+  .pagination .page-link:hover {
+      transform: translateY(-1px);
+  }
+
+  /* Estilos para modo oscuro */
+  body.dark-mode .pagination-info {
+      color: #9ca3af;
+  }
+
+/* Mejorar apariencia de los botones de paginación */
+.pagination .page-link {
+    border-radius: 0.375rem;
+    margin: 0 0.125rem;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+
 </style>
 
 </style>
@@ -433,9 +500,50 @@
   </div>
 </div>
 
-<div class="mt-3">
-  {{ $tickets->links() }}
+{{-- Paginación personalizada - ESQUINA IZQUIERDA --}}
+@if($tickets->hasPages())
+<div class="pagination-container">
+    {{-- Flechas de navegación ARRIBA - IZQUIERDA --}}
+    <div class="pagination-top">
+        <nav aria-label="Pagination">
+            <ul class="pagination mb-0">
+                {{-- Botón Anterior --}}
+                @if($tickets->onFirstPage())
+                    <li class="page-item disabled">
+                        <span class="page-link">‹ Anterior</span>
+                    </li>
+                @else
+                    <li class="page-item">
+                        <a class="page-link" href="{{ $tickets->previousPageUrl() }}" rel="prev">‹ Anterior</a>
+                    </li>
+                @endif
+
+                {{-- Botón Siguiente --}}
+                @if($tickets->hasMorePages())
+                    <li class="page-item">
+                        <a class="page-link" href="{{ $tickets->nextPageUrl() }}" rel="next">Siguiente ›</a>
+                    </li>
+                @else
+                    <li class="page-item disabled">
+                        <span class="page-link">Siguiente ›</span>
+                    </li>
+                @endif
+            </ul>
+        </nav>
+    </div>
+
+    {{-- Información de resultados ABAJO - IZQUIERDA --}}
+    <div class="pagination-bottom">
+        <div class="pagination-info">
+            Mostrando {{ $tickets->firstItem() }} a {{ $tickets->lastItem() }} de {{ $tickets->total() }} resultados
+        </div>
+    </div>
 </div>
+@else
+<div class="pagination-info text-left mt-3">
+    Mostrando {{ $tickets->count() }} resultados
+</div>
+@endif
 
 @endsection
 
