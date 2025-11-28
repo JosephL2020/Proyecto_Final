@@ -334,16 +334,28 @@
                             'IT'      => 'IT',
                             default   => 'Empleado'
                         };
+                        
                     @endphp
 
-                    <div class="navbar-user-meta text-end me-1">
-                        <div class="name">
-                            {{ auth()->user()->name }}
-                        </div>
-                        <div class="role">
-                            {{ $rol }}
-                        </div>
+            @php
+                $initial = strtoupper(mb_substr(auth()->user()->name, 0, 1));
+                $avatarClass = (auth()->user()->role === 'IT' || auth()->user()->role === 'Manager') ? 'avatar-it' : 'avatar-default';
+            @endphp
+
+            <div class="d-flex align-items-center gap-2">
+                {{-- Avatar circular con inicial --}}
+                <div class="avatar-wrapper {{ $avatarClass }}">
+                    <div class="avatar-inner">
+                        {{ $initial }}
                     </div>
+                </div>
+
+                {{-- Nombre y rol --}}
+                <div class="navbar-user-meta text-start">
+                    <div class="name">{{ auth()->user()->name }}</div>
+                    <div class="role">{{ $rol }}</div>
+                </div>
+            </div>
 
                     <button type="button" id="themeToggle"
                             class="btn btn-sm btn-outline-secondary rounded-pill px-3">
