@@ -200,12 +200,12 @@ body.dark-mode .performance-table .stat-number {
         {{-- Asignados --}}
         <div class="col-6 col-md-4 col-xl-2">
             <a href="{{ route('tickets.index', ['status' => 'assigned']) }}" class="kpi-link">
-                <div class="card kpi-card text-dark h-100">
+                <div class="card kpi-card text-white h-100">
                     <div class="card-body py-3 px-3"
                          style="background: linear-gradient(135deg, #facc15, #eab308);">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <div class="small text-dark mb-1">Asignados</div>
+                                <div class="small text-white-50 mb-1">Asignados</div>
                                 <div class="h3 mb-0">{{ $stats['assigned'] ?? 0 }}</div>
                             </div>
                             <i class="bi bi-person-workspace h3 mb-0 kpi-icon"></i>
@@ -256,7 +256,7 @@ body.dark-mode .performance-table .stat-number {
             <a href="{{ route('tickets.index', ['status' => 'closed']) }}" class="kpi-link">
                 <div class="card kpi-card text-white h-100">
                     <div class="card-body py-3 px-3"
-                         style="background: linear-gradient(135deg, #111827, #020617);">
+                         style="background: linear-gradient(135deg, #ca4324ff, #a51e00ff);">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="small text-white-50 mb-1">Cerrados</div>
@@ -510,7 +510,7 @@ body.dark-mode .performance-table .stat-number {
             <div class="mb-1">
                 <span class="section-title">Top categorías</span>
             </div>
-            <div class="card border-0 shadow-sm card-compact h-100">
+            <div class="card border-0 shadow-sm card-compact ">
                 <div class="card-body">
                     @forelse($topCategories ?? [] as $c)
                         @php
@@ -622,5 +622,6 @@ body.dark-mode .performance-table .stat-number {
         });
     }
 </script>
+    <div class="mb-5"></div>
 @endpush
 @endsection

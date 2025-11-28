@@ -51,7 +51,6 @@
                             @enderror
                         </div>
                     </div>
-
                     {{-- Password --}}
                     <div class="mb-2">
                         <label for="password" class="form-label small text-muted">Contraseña</label>
@@ -60,13 +59,15 @@
                                 <i class="bi bi-lock"></i>
                             </span>
                             <input id="password"
-                                   type="password"
-                                   class="form-control @error('password') is-invalid @enderror"
-                                   name="password"
-                                   required
-                                   autocomplete="current-password"
-                                   placeholder="Ingresa tu contraseña">
-
+                                type="password"
+                                class="form-control @error('password') is-invalid @enderror"
+                                name="password"
+                                required
+                                autocomplete="current-password"
+                                placeholder="Ingresa tu contraseña">
+                            <button class="btn btn-outline-secondary" type="button" id="toggle-password">
+                                <i class="bi bi-eye"></i>
+                            </button>
                             @error('password')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -97,10 +98,14 @@
 
                     {{-- Botón --}}
                     <div class="d-grid mb-2">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-box-arrow-in-right me-1"></i>
-                            Entrar
-                        </button>
+                        <button type="submit" class="btn btn-primary" id="login-btn">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>
+                        <span class="btn-text">Entrar</span>
+                        <div class="spinner-border spinner-border-sm d-none" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                    </button>
+
                     </div>
 
                 </form>
@@ -110,5 +115,40 @@
 
     </div>
 </div>
+
+
+<script>
+document.querySelector('form').addEventListener('submit', function() {
+    const btn = document.getElementById('login-btn');
+    btn.disabled = true;
+    btn.querySelector('.btn-text').textContent = 'Entrando...';
+    btn.querySelector('.spinner-border').classList.remove('d-none');
+});
+</script>
+            {{-- JavaScript para mostrar/ocultar contraseña --}}
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const togglePassword = document.getElementById('toggle-password');
+                const passwordInput = document.getElementById('password');
+                const passwordIcon = togglePassword.querySelector('i');
+                
+                togglePassword.addEventListener('click', function() {
+                    // Cambiar el tipo de input
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    
+                    // Cambiar el ícono
+                    if (type === 'text') {
+                        passwordIcon.classList.remove('bi-eye');
+                        passwordIcon.classList.add('bi-eye-slash');
+                    } else {
+                        passwordIcon.classList.remove('bi-eye-slash');
+                        passwordIcon.classList.add('bi-eye');
+                    }
+                });
+            });
+            </script>
+
+
 
 @endsection

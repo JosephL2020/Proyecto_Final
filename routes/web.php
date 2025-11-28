@@ -21,6 +21,9 @@ Route::get('/', function () {
     return redirect()->route('tickets.index');
 });
 
+Route::get('/', function () {
+    return view('welcome'); //  landing page
+});
 Auth::routes();
 
 Route::middleware('auth')->group(function () {
@@ -83,4 +86,5 @@ Route::middleware('auth')->group(function () {
     // Calificación de tickets
     Route::post('tickets/{ticket}/rate', [TicketController::class, 'rate'])
         ->name('tickets.rate');
+        
 });
