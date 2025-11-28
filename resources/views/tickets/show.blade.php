@@ -243,21 +243,28 @@
     <div class="text-muted small">
       Ticket {{ $ticket->code }} · Creado el
       {{ $ticket->created_at ? $ticket->created_at->format('Y-m-d H:i') : '-' }}
+
+      {{-- Badges debajo del texto --}}
+      <div class="mt-2 d-flex gap-1 align-items-center">
+    <span class="badge-status {{ $statusClass }}">
+      {{ $ticket->status_label }}
+    </span>
+    <span class="badge-priority {{ $prioClass }}">
+      {{ $ticket->priority_label }}
+    </span>
+    <span class="badge {{ $slaClass }} rounded-pill px-2 py-1">
+      SLA: {{ $slaStatus }}
+    </span>
+    </div>
     </div>
   </div>
-  <div class="text-end">
-    <div class="mb-1">
-      <span class="badge-status {{ $statusClass }}">
-        {{ $ticket->status_label }}
-      </span>
-      <span class="badge-priority {{ $prioClass }}">
-        {{ $ticket->priority_label }}
-      </span>
-    </div>
-    <div class="small">
-      <span class="badge {{ $slaClass }} rounded-pill px-3">
-        SLA: {{ $slaStatus }}
-      </span>
+
+    {{-- cambio de lugar en los botones --}}
+     <div class="d-flex gap-2">
+      <a href="{{ route('tickets.index') }}" class="btn btn-outline-secondary btn-sm">
+        Volver
+      </a>
+
     </div>
   </div>
 </div>
@@ -268,7 +275,15 @@
     {{-- Detalles principales --}}
     <div class="card mb-3">
       <div class="card-body">
-        <h6 class="mb-2">Descripción del ticket</h6>
+        <h6 class="mb-2 d-flex justify-content-between align-items-center">
+          Descripción del ticket
+          @can('update', $ticket)
+            <a href="{{ route('tickets.edit', $ticket) }}" class="btn btn-outline-primary btn-sm">
+              Editar ticket
+            </a>
+          @endcan
+        </h6>
+
         <p class="mb-3" style="white-space: pre-line;">
           {{ $ticket->description }}
         </p>
@@ -283,6 +298,7 @@
             {{ $ticket->created_at ? $ticket->created_at->format('Y-m-d H:i') : '-' }}
           </div>
           <div class="col-md-4 mb-1">
+            
             <span class="fw-semibold">Última actualización:</span>
             {{ $ticket->updated_at ? $ticket->updated_at->format('Y-m-d H:i') : '-' }}
           </div>
@@ -343,7 +359,7 @@
           </div>
 
           <div class="d-flex justify-content-end">
-            <button class="btn btn-primary btn-sm">
+            <button class="btn btn-outline-primary btn-sm">
               Guardar comentario
             </button>
           </div>
@@ -719,17 +735,7 @@
   </div>
 </div>
 
-    {{-- Botones inferiores --}}
-    <div class="d-flex gap-2">
-      <a href="{{ route('tickets.index') }}" class="btn btn-outline-secondary btn-sm">
-        Volver al listado
-      </a>
-      @can('update', $ticket)
-        <a href="{{ route('tickets.edit', $ticket) }}" class="btn btn-outline-primary btn-sm">
-          Editar ticket
-        </a>
-      @endcan
-    </div>
+
 
   </div>
 </div>
