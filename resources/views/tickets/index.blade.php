@@ -228,7 +228,7 @@
   </div>
   <div class="d-flex gap-2">
     <button type="button" class="btn btn-outline-secondary" id="btnExportExcel">
-      Exportar Excel
+      Exportar CSV
     </button>
     <a href="{{ route('tickets.create') }}" class="btn btn-primary">
       Nuevo ticket
@@ -591,17 +591,17 @@
     btnExport.addEventListener('click', () => {
       const rows = Array.from(table.querySelectorAll('tr'));
       const csv = [];
-      const separator = ';';
+      const separator = ','; // Cambia a ';' si tu Excel espera punto y coma
 
       rows.forEach((row, rowIndex) => {
         const cells = Array.from(row.querySelectorAll(rowIndex === 0 ? 'th' : 'td'));
         const rowData = cells.map(cell =>
-          '"' + cell.innerText.replace(/"/g, '""').trim() + '"'
+          '"' + cell.innerText.replace(/"/g, '""').replace(/\r?\n|\r/g, ' ') + '"'
         );
         csv.push(rowData.join(separator));
       });
 
-      const blob = new Blob([csv.join('\n')], { type: 'text/csv;charset=utf-8;' });
+      const blob = new Blob(["\ufeff" + csv.join("\n")], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -612,6 +612,8 @@
       URL.revokeObjectURL(url);
     });
   })();
+
+
 </script>
 @endpush
 
