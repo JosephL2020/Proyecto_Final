@@ -288,7 +288,7 @@
                 </form>
                 
                 <div class="footer-text">
-                    &copy; 2023 Sistema de Gestión de Tickets. Todos los derechos reservados.
+                    &copy; {{ date('Y') }} Sistema de Gestión de Tickets. Todos los derechos reservados.
                 </div>
             </div>
         </div>

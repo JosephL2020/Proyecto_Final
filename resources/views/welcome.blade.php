@@ -50,19 +50,7 @@
                 <span class="text-xl font-semibold">TicketFlow</span>
             </div>
 
-            <nav class="flex items-center gap-4">
-                @auth
-                    <a href="{{ url('/dashboard') }}" 
-                       class="px-5 py-2 text-sm border border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-600 rounded-lg transition-colors">
-                        Dashboard
-                    </a>
-                @else
-                    <a href="{{ route('login') }}" 
-                       class="px-5 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium">
-                        Iniciar Sesión
-                    </a>
-                @endauth
-            </nav>
+
         </header>
 
         <!-- Hero Section -->
