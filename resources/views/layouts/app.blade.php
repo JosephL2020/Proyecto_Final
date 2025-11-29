@@ -3,15 +3,13 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-
     {{-- Token CSRF para peticiones AJAX --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Sistema de Gestión de Tickets - Proyecto Final</title>
+    <title>TicketFlow - Sistema de Gestión de Tickets</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
     <style>
         body {
@@ -19,41 +17,75 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        /* NAVBAR CORPORATIVO */
+        /* NAVBAR CORPORATIVO MEJORADO */
         .navbar-custom {
             font-size: 0.95rem;
             min-height: 60px;
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%) !important;
+        }
+
+        .navbar-custom .navbar-brand {
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: white !important;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .navbar-custom .navbar-brand:hover {
+            color: #f0f9ff !important;
         }
 
         .navbar-custom .nav-link {
             padding: 0.4rem 0.85rem;
             font-weight: 500;
-            color: #374151;
+            color: #e0f2fe !important;
+            border-radius: 0.375rem;
+            transition: all 0.2s ease;
         }
 
         .navbar-custom .nav-link:hover {
-            color: #1d4ed8;
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
         .navbar-custom .nav-link.active {
-            font-weight: 700;
-            color: #1e3a8a !important;
-            border-bottom: 2px solid #1d4ed8;
-            border-radius: 0;
+            font-weight: 600;
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 0.375rem;
         }
 
         .navbar-user-meta {
-            line-height: 1.1;
+            line-height: 1.2;
             font-size: 0.8rem;
         }
 
         .navbar-user-meta .name {
             font-weight: 600;
-            color: #111827;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .navbar-user-meta .role {
-            color: #6b7280;
+     .navbar-user-meta .email {
+    color: #e0f2fe !important;
+    font-size: 0.75rem;
+    font-weight: 400;
+}
+
+
+        /* Botones en navbar */
+        .navbar-custom .btn-outline-light {
+            border-color: rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        .navbar-custom .btn-outline-light:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: white;
         }
 
         /* ============================
@@ -65,37 +97,46 @@
             color: #e5e7eb;
         }
 
-        body.dark-mode .navbar,
-        body.dark-mode .navbar.bg-white {
-            background-color: #020617 !important;
-            color: #e5e7eb;
-            border-color: #1f2937 !important;
+        /* Navbar en modo oscuro */
+        body.dark-mode .navbar-custom {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+            border-bottom-color: #334155 !important;
         }
 
         body.dark-mode .navbar-custom .nav-link {
-            color: #e5e7eb;
+            color: #cbd5e1 !important;
+        }
+
+        body.dark-mode .navbar-custom .nav-link:hover {
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.05);
         }
 
         body.dark-mode .navbar-custom .nav-link.active {
-            color: #93c5fd !important;
-            border-bottom-color: #3b82f6;
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
         body.dark-mode .navbar-user-meta .name {
-            color: #f9fafb;
+            color: #f1f5f9;
         }
 
         body.dark-mode .navbar-user-meta .role {
-            color: #9ca3af;
+            color: #94a3b8;
         }
 
+        /* Resto de tus estilos dark mode se mantienen igual... */
         body.dark-mode .dropdown-menu {
-            background-color: #020617;
+            background-color: #1e293b;
             color: #e5e7eb;
         }
 
         body.dark-mode .dropdown-item {
             color: #e5e7eb;
+        }
+
+        body.dark-mode .dropdown-item:hover {
+            background-color: #334155;
         }
 
         /* TABLAS - dark mode */
@@ -149,7 +190,6 @@
         body.dark-mode .table a:hover {
             color: #93c5fd !important;
         }
-                
 
         /* TARJETAS / PANEL DE CONTROL */
         body.dark-mode .card,
@@ -162,7 +202,7 @@
             border-color: #4b5563 !important;
         }
 
-       body.dark-mode h1,
+        body.dark-mode h1,
         body.dark-mode h2,
         body.dark-mode h3,
         body.dark-mode h4,
@@ -173,30 +213,6 @@
 
         body.dark-mode .text-muted {
             color: #d1d5db !important;
-        }
-
-        /* TABLAS */
-        body.dark-mode .table thead {
-            background-color: #020617;
-            color: #e5e7eb;
-        }
-
-        body.dark-mode .table-striped > tbody > tr:nth-of-type(odd) > * {
-            --bs-table-accent-bg: #1f2937;
-            color: #f3f4f6;
-        }
-
-        /* DIVISIONES */
-        body.dark-mode .border,
-        body.dark-mode .border-top,
-        body.dark-mode .border-bottom,
-        body.dark-mode .border-start,
-        body.dark-mode .border-end {
-            border-color: #4b5563 !important;
-        }
-
-        body.dark-mode hr {
-            border-top-color: #4b5563;
         }
 
         /* BOTONES */
@@ -234,89 +250,38 @@
             color: #9ca3af;
         }
 
-        /* SOLUCIÓN PARA SVG GIGANTE */
-        svg.w-5.h-5 {
-            width: 20px !important;
-            height: 20px !important;
-        }
-
-            /* solo una paginación según tamaño */
+        /* PAGINACIÓN */
         .flex.justify-between.flex-1.sm\:hidden {
-            display: none; /* Oculta celular en desktop */
+            display: none;
         }
 
         .hidden.sm\:flex-1.sm\:flex.sm\:items-center.sm\:justify-between {
-            display: flex; /* Muestra desktop en desktop */
+            display: flex;
         }
 
-        /* En celular */
         @media (max-width: 640px) {
             .flex.justify-between.flex-1.sm\:hidden {
-                display: flex !important; /* Muestra cel */
+                display: flex !important;
             }
             
             .hidden.sm\:flex-1.sm\:flex.sm\:items-center.sm\:justify-between {
-                display: none !important; /* Oculta desktop */
+                display: none !important;
             }
         }
 
-         /* avatar en todas las views */
-        .avatar-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: .45rem;
-        }
-        .avatar-wrapper {
-            position: relative;
-            width: 34px;
-            height: 34px;
-            border-radius: 999px;
-            background: linear-gradient(135deg, #3b82f6, #22c55e);
-            padding: 2px;
-            box-shadow: 0 0 0 1px rgba(15,23,42,0.06), 0 4px 8px rgba(15,23,42,0.18);
-        }
-        .avatar-inner {
-            width: 100%;
-            height: 100%;
-            border-radius: inherit;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: .8rem;
-            font-weight: 700;
-            background: #f9fafb;
-            color: #1f2937;
-        }
-        .avatar-it .avatar-inner {
-            background: #eff6ff;
-            color: #1d4ed8;
-        }
-        .avatar-default .avatar-inner {
-            background: #f3f4f6;
-            color: #4b5563;
-        }
-
-        /* Hover más notorio en el menú superior */
-        .nav-link:hover,
-        .nav-item:hover > .nav-link {
-            background-color: rgba(59, 130, 246, 0.25); /* azul más visible */
-            color: #1d4ed8 !important;
-            box-shadow: 0 0 6px rgba(59, 130, 246, 0.3);
-            transition: all 0.2s ease-in-out;
-            border-radius: 8px;
-        }
-    
     </style>
 </head>
 <body>
 
 {{-- NAVBAR PRINCIPAL (NO SE MUESTRA EN LOGIN) --}}
 @if (!request()->routeIs('login'))
-<nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm mb-4 navbar-custom">
+<nav class="navbar navbar-expand-lg navbar-custom border-bottom shadow-sm mb-4">
     <div class="container-fluid">
 
-        {{-- Marca (por ahora vacía, por si luego agregamos logo) --}}
-        <a class="navbar-brand me-3" href="{{ route('tickets.index') }}">
+        {{-- MARCA CON TICKETFLOW --}}
+        <a class="navbar-brand me-4" href="{{ route('tickets.index') }}">
+            <i class="bi bi-ticket-perforated"></i>
+            TicketFlow
         </a>
 
         {{-- Botón modo móvil --}}
@@ -337,6 +302,7 @@
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('dashboard.index') ? 'active' : '' }}"
                                href="{{ route('dashboard.index') }}">
+                                <i class="bi bi-speedometer2 me-1"></i>
                                 Dashboard
                             </a>
                         </li>
@@ -346,6 +312,7 @@
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('tickets.*') ? 'active' : '' }}"
                            href="{{ route('tickets.index') }}">
+                            <i class="bi bi-ticket-detailed me-1"></i>
                             Tickets
                         </a>
                     </li>
@@ -355,6 +322,7 @@
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}"
                                href="{{ route('users.index') }}">
+                                <i class="bi bi-people me-1"></i>
                                 Usuarios
                             </a>
                         </li>
@@ -368,21 +336,41 @@
 
                 @guest
                     @if(!request()->routeIs('login'))
-                        <a class="btn btn-sm btn-outline-primary rounded-pill px-3"
+                        <a class="btn btn-sm btn-outline-light rounded-pill px-3"
                            href="{{ route('login') }}">
+                            <i class="bi bi-box-arrow-in-right me-1"></i>
                             Iniciar sesión
                         </a>
                     @endif
                 @else
                     @php
                         $rol = match(auth()->user()->role) {
-                            'Manager' => 'Gerente de IT',
-                            'IT'      => 'IT',
-                            default   => 'Empleado'
+                            'Manager' => 'Gerente IT',
+                            'IT'      => 'Soporte IT',
+                            'Empleado' => 'Empleado',
+                            'User'    => 'Usuario',
+                            default   => 'Usuario'
+                        };
+                        
+                        $roleBadge = match(auth()->user()->role) {
+                            'Manager' => 'bg-warning text-dark',
+                            'IT'      => 'bg-info text-white',
+                            'Empleado' => 'bg-secondary text-white',
+                            'User'    => 'bg-light text-dark',
+                            default   => 'bg-light text-dark'
                         };
                         
                     @endphp
 
+                                <div class="navbar-user-meta text-end me-2">
+                    <div class="name d-flex align-items-center gap-2">
+                        {{ auth()->user()->name }}
+                        <span class="badge {{ $roleBadge }} role-badge">{{ $rol }}</span>
+                    </div>
+                    <div class="email">
+                        {{ auth()->user()->email }}
+                    </div>
+                </div>
             @php
                 $initial = strtoupper(mb_substr(auth()->user()->name, 0, 1));
                 $avatarClass = (auth()->user()->role === 'IT' || auth()->user()->role === 'Manager') ? 'avatar-it' : 'avatar-default';
@@ -404,14 +392,16 @@
             </div>
 
                     <button type="button" id="themeToggle"
-                            class="btn btn-sm btn-outline-secondary rounded-pill px-3">
-                        Modo oscuro
+                            class="btn btn-sm btn-outline-light rounded-pill px-3">
+                        <i class="bi bi-moon-stars me-1"></i>
+                        <span class="theme-text">Modo oscuro</span>
                     </button>
 
                     <form method="POST" action="{{ route('logout') }}" class="m-0 p-0">
                         @csrf
-                        <button class="btn btn-sm btn-outline-danger rounded-pill px-3">
-                            Cerrar sesión
+                        <button class="btn btn-sm btn-outline-light rounded-pill px-3">
+                            <i class="bi bi-box-arrow-right me-1"></i>
+                            Salir
                         </button>
                     </form>
                 @endguest
@@ -425,14 +415,18 @@
 
 <div class="container-fluid px-3">
     @if(session('ok'))
-        <div class="alert alert-success shadow-sm">
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
             {{ session('ok') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
 
     @if(session('error'))
-        <div class="alert alert-danger shadow-sm">
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
             {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
 
@@ -443,21 +437,26 @@
 
 <script>
     (function () {
-        const STORAGE_KEY = 'ticket_system_theme';
+        const STORAGE_KEY = 'ticketflow_theme';
         const body = document.body;
         const toggleBtn = document.getElementById('themeToggle');
+        const themeText = toggleBtn ? toggleBtn.querySelector('.theme-text') : null;
 
+        // Aplicar tema guardado
+        const savedTheme = localStorage.getItem(STORAGE_KEY);
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+            if (themeText) themeText.textContent = 'Modo claro';
+        }
+
+        // Toggle tema
         if (toggleBtn) {
-            const savedTheme = localStorage.getItem(STORAGE_KEY);
-            if (savedTheme === 'dark') {
-                body.classList.add('dark-mode');
-                toggleBtn.innerHTML = 'Modo claro';
-            }
-
             toggleBtn.addEventListener('click', function () {
                 const isDark = body.classList.toggle('dark-mode');
                 localStorage.setItem(STORAGE_KEY, isDark ? 'dark' : 'light');
-                this.innerHTML = isDark ? 'Modo claro' : 'Modo oscuro';
+                if (themeText) {
+                    themeText.textContent = isDark ? 'Modo claro' : 'Modo oscuro';
+                }
             });
         }
     })();
