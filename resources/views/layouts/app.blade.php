@@ -71,10 +71,66 @@
         }
 
      .navbar-user-meta .email {
-    color: #e0f2fe !important;
-    font-size: 0.75rem;
-    font-weight: 400;
-}
+        color: #e0f2fe !important;
+        font-size: 0.75rem;
+        font-weight: 400;
+        }
+
+    /* AVATAR GLOBAL */
+    .avatar-wrapper {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: #007bff; /* texto azul */
+        background-color: #fff; /* fondo blanco */
+        border: 2px solid transparent;
+        background-image: linear-gradient(#fff, #fff),
+                          linear-gradient(135deg, #00c9a7, #007bff);
+        background-origin: border-box;
+        background-clip: content-box, border-box;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+        text-align: center;
+        line-height: 1; /* centra verticalmente mejor */
+    }
+
+    /* Avatar compacto (por ejemplo en tabla o encabezado) */
+    .avatar-chip {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-family: "Inter", sans-serif;
+    }
+
+    .avatar-chip .avatar-wrapper {
+        width: 34px;
+        height: 34px;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+    }
+
+    .avatar-chip .avatar-text {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.1;
+    }
+
+    .avatar-chip .name {
+        color: #ffffff; /* blanco si fondo oscuro */
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .avatar-chip .role {
+        color: #9ca3af; /* gris suave */
+        font-size: 0.75rem;
+    }
+
+
 
 
         /* Botones en navbar */
@@ -362,34 +418,24 @@
                         
                     @endphp
 
-                                <div class="navbar-user-meta text-end me-2">
-                    <div class="name d-flex align-items-center gap-2">
-                        {{ auth()->user()->name }}
-                        <span class="badge {{ $roleBadge }} role-badge">{{ $rol }}</span>
-                    </div>
-                    <div class="email">
-                        {{ auth()->user()->email }}
-                    </div>
-                </div>
+            {{-- Avatar,nombre,rol y correo Navbar --}}               
             @php
-                $initial = strtoupper(mb_substr(auth()->user()->name, 0, 1));
-                $avatarClass = (auth()->user()->role === 'IT' || auth()->user()->role === 'Manager') ? 'avatar-it' : 'avatar-default';
+                $user = auth()->user();
+                $initials = strtoupper(substr($user->name, 0, 1) . substr($user->lastname ?? '', 0, 1));
             @endphp
 
-            <div class="d-flex align-items-center gap-2">
-                {{-- Avatar circular con inicial --}}
-                <div class="avatar-wrapper {{ $avatarClass }}">
-                    <div class="avatar-inner">
-                        {{ $initial }}
-                    </div>
-                </div>
-
-                {{-- Nombre y rol --}}
+            <div class="navbar-user d-flex align-items-center me-3">
+                <div class="avatar-wrapper me-2">{{ $initials }}</div>
                 <div class="navbar-user-meta text-start">
-                    <div class="name">{{ auth()->user()->name }}</div>
-                    <div class="role">{{ $rol }}</div>
+                    <div class="name d-flex align-items-center gap-2">
+                        {{ $user->name }}
+                        <span class="badge {{ $roleBadge }} role-badge">{{ $rol }}</span>
+                    </div>
+                    <div class="email">{{ $user->email }}</div>
                 </div>
             </div>
+
+
 
                     <button type="button" id="themeToggle"
                             class="btn btn-sm btn-outline-light rounded-pill px-3">

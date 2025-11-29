@@ -120,32 +120,7 @@
       color: #374151;
   }
 
-  .avatar-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: .55rem;
-  }
-  .avatar-wrapper {
-      position: relative;
-      width: 40px;
-      height: 40px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #3b82f6, #22c55e);
-      padding: 2px;
-      box-shadow: 0 0 0 1px rgba(15,23,42,0.08), 0 6px 12px rgba(15,23,42,0.25);
-  }
-  .avatar-inner {
-      width: 100%;
-      height: 100%;
-      border-radius: inherit;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      font-weight: 700;
-      background: #f9fafb;
-      color: #1f2937;
-  }
+
 
   .timeline {
       position: relative;
