@@ -260,6 +260,52 @@
             }
         }
 
+         /* avatar en todas las views */
+        .avatar-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+        }
+        .avatar-wrapper {
+            position: relative;
+            width: 34px;
+            height: 34px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #3b82f6, #22c55e);
+            padding: 2px;
+            box-shadow: 0 0 0 1px rgba(15,23,42,0.06), 0 4px 8px rgba(15,23,42,0.18);
+        }
+        .avatar-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .8rem;
+            font-weight: 700;
+            background: #f9fafb;
+            color: #1f2937;
+        }
+        .avatar-it .avatar-inner {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+        .avatar-default .avatar-inner {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        /* Hover más notorio en el menú superior */
+        .nav-link:hover,
+        .nav-item:hover > .nav-link {
+            background-color: rgba(59, 130, 246, 0.25); /* azul más visible */
+            color: #1d4ed8 !important;
+            box-shadow: 0 0 6px rgba(59, 130, 246, 0.3);
+            transition: all 0.2s ease-in-out;
+            border-radius: 8px;
+        }
+    
     </style>
 </head>
 <body>
