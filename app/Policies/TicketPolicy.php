@@ -4,82 +4,95 @@ namespace App\Policies;
 
 use App\Models\Ticket;
 use App\Models\User;
+use App\Models\Department;
 
 class TicketPolicy
 {
-    /**
-     * Ver listado de tickets.
-     * 
-     * Todos pueden acceder al listado, pero luego el controlador filtra por rol.
-     */
     public function viewAny(User $user): bool
     {
         return true;
     }
 
-    /**
-     * Ver un ticket.
-     *
-     * Manager → puede ver todos
-     * IT      → puede ver todos
-     * Empleado → solo sus propios tickets
-     */
+    // ✅ NUEVO: Permiso para ver Kanban
+    public function viewKanban(User $user): bool
+    {
+        if ($user->isManager()) return true;
+
+        if ($user->isIt() || $user->isDeptManager() || $user->isDeptSupport()) return true;
+
+        return false;
+    }
+
     public function view(User $user, Ticket $ticket): bool
     {
-        if ($user->isManager() || $user->isIt()) {
-            return true;
+        // Gerente IT ve todo
+        if ($user->isManager()) return true;
+
+        // Soporte IT: solo asignados a él
+        if ($user->isIt()) return $ticket->assigned_to === $user->id;
+
+        // Gerente de Departamento: tickets del departamento que administra
+        if ($user->isDeptManager()) {
+            return Department::where('manager_user_id', $user->id)
+                ->where('id', $ticket->department_id)
+                ->exists();
         }
 
+        // Soporte de Subdivisión: tickets de su subdivisión (o asignados a él)
+        if ($user->isDeptSupport()) {
+            if ($ticket->assigned_to === $user->id) return true;
+
+            return \App\Models\Subdivision::where('agent_user_id', $user->id)
+                ->where('id', $ticket->subdivision_id)
+                ->exists();
+        }
+
+        // Empleado: solo los suyos
         return $ticket->created_by === $user->id;
     }
 
-    /**
-     * Crear tickets.
-     *
-     * Todos los roles pueden crear tickets.
-     */
     public function create(User $user): bool
     {
-        return in_array($user->role, ['Empleado', 'IT', 'Manager'], true);
+        return $user->isActive();
     }
 
-    /**
-     * Actualizar un ticket.
-     *
-     * Manager → puede editar cualquier ticket
-     * IT      → puede editar solo tickets asignados a él
-     * Empleado → no puede editar
-     */
     public function update(User $user, Ticket $ticket): bool
     {
-        if ($user->isManager()) {
-            return true;
+        // Gerente IT
+        if ($user->isManager()) return true;
+
+        // Gerente de Departamento: puede editar tickets de su depto
+        if ($user->isDeptManager()) {
+            return \App\Models\Department::where('manager_user_id', $user->id)
+                ->where('id', $ticket->department_id)
+                ->exists();
         }
 
-        if ($user->isIt() && $ticket->assigned_to === $user->id) {
+        // IT o Soporte de Subdivisión: solo si está asignado
+        if (($user->isIt() || $user->isDeptSupport()) && $ticket->assigned_to === $user->id) {
             return true;
         }
 
         return false;
     }
 
-    /**
-     * Eliminar tickets.
-     *
-     * Solo Manager.
-     */
     public function delete(User $user, Ticket $ticket): bool
     {
         return $user->isManager();
     }
 
-    /**
-     * Asignar tickets.
-     *
-     * Solo Manager.
-     */
     public function assign(User $user, Ticket $ticket): bool
     {
-        return $user->isManager();
+        // Gerente IT puede asignar todo
+        if ($user->isManager()) return true;
+
+        // Gerente de Departamento puede asignar tickets de su depto
+        if ($user->isDeptManager()) {
+            return \App\Models\Department::where('manager_user_id', $user->id)
+                ->where('id', $ticket->department_id)
+                ->exists();
+        }
+
+        return false;
     }
 }

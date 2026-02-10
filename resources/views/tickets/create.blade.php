@@ -7,6 +7,33 @@
     <form method="POST" action="{{ route('tickets.store') }}" enctype="multipart/form-data">
         @csrf
 
+        {{-- Departamento --}}
+        <div class="mb-3">
+            <label class="form-label">Departamento</label>
+            <select id="department_id" name="department_id" class="form-select @error('department_id') is-invalid @enderror" required>
+                <option value="">Seleccione un departamento...</option>
+                @foreach($departments as $d)
+                    <option value="{{ $d->id }}" {{ old('department_id') == $d->id ? 'selected' : '' }}>
+                        {{ $d->name }}
+                    </option>
+                @endforeach
+            </select>
+            @error('department_id')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
+        {{-- Subdivisión --}}
+        <div class="mb-3">
+            <label class="form-label">Subdivisión / Área</label>
+            <select id="subdivision_id" name="subdivision_id" class="form-select @error('subdivision_id') is-invalid @enderror" required disabled>
+                <option value="">Primero seleccione un departamento...</option>
+            </select>
+            @error('subdivision_id')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
         {{-- Título --}}
         <div class="mb-3">
             <label class="form-label">Título</label>
@@ -63,4 +90,49 @@
         <a href="{{ route('tickets.index') }}" class="btn btn-light">Cancelar</a>
     </form>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const deptSelect = document.getElementById('department_id');
+    const subSelect  = document.getElementById('subdivision_id');
+
+    async function loadSubdivisions(deptId, oldSubId = null) {
+        subSelect.innerHTML = '<option value="">Cargando...</option>';
+        subSelect.disabled = true;
+
+        if (!deptId) {
+            subSelect.innerHTML = '<option value="">Primero seleccione un departamento...</option>';
+            return;
+        }
+
+        try {
+            const url = `/departments/${deptId}/subdivisions/options`;
+            const res = await fetch(url, { headers: { 'Accept': 'application/json' }});
+            const data = await res.json();
+
+            subSelect.innerHTML = '<option value="">Seleccione una subdivisión...</option>';
+
+            data.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.id;
+                opt.textContent = s.name;
+                if (oldSubId && String(oldSubId) === String(s.id)) opt.selected = true;
+                subSelect.appendChild(opt);
+            });
+
+            subSelect.disabled = false;
+
+        } catch (e) {
+            subSelect.innerHTML = '<option value="">Error cargando subdivisiones</option>';
+        }
+    }
+
+    deptSelect.addEventListener('change', () => loadSubdivisions(deptSelect.value));
+
+    // Si viene old() (por validación fallida), recargar
+    const oldDept = "{{ old('department_id') }}";
+    const oldSub  = "{{ old('subdivision_id') }}";
+    if (oldDept) loadSubdivisions(oldDept, oldSub);
+});
+</script>
 @endsection

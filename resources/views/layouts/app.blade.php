@@ -70,68 +70,65 @@
             gap: 0.5rem;
         }
 
-     .navbar-user-meta .email {
-        color: #e0f2fe !important;
-        font-size: 0.75rem;
-        font-weight: 400;
+        .navbar-user-meta .email {
+            color: #e0f2fe !important;
+            font-size: 0.75rem;
+            font-weight: 400;
         }
 
-    /* AVATAR GLOBAL */
-    .avatar-wrapper {
-        width: 38px;
-        height: 38px;
-        border-radius: 50%;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        font-size: 0.9rem;
-        color: #007bff; /* texto azul */
-        background-color: #fff; /* fondo blanco */
-        border: 2px solid transparent;
-        background-image: linear-gradient(#fff, #fff),
-                          linear-gradient(135deg, #00c9a7, #007bff);
-        background-origin: border-box;
-        background-clip: content-box, border-box;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-        text-align: center;
-        line-height: 1; /* centra verticalmente mejor */
-    }
+        /* AVATAR GLOBAL */
+        .avatar-wrapper {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #007bff; /* texto azul */
+            background-color: #fff; /* fondo blanco */
+            border: 2px solid transparent;
+            background-image: linear-gradient(#fff, #fff),
+                              linear-gradient(135deg, #00c9a7, #007bff);
+            background-origin: border-box;
+            background-clip: content-box, border-box;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+            text-align: center;
+            line-height: 1;
+        }
 
-    /* Avatar compacto (por ejemplo en tabla o encabezado) */
-    .avatar-chip {
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-        font-family: "Inter", sans-serif;
-    }
+        /* Avatar compacto (por ejemplo en tabla o encabezado) */
+        .avatar-chip {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-family: "Inter", sans-serif;
+        }
 
-    .avatar-chip .avatar-wrapper {
-        width: 34px;
-        height: 34px;
-        font-size: 0.85rem;
-        flex-shrink: 0;
-    }
+        .avatar-chip .avatar-wrapper {
+            width: 34px;
+            height: 34px;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
 
-    .avatar-chip .avatar-text {
-        display: flex;
-        flex-direction: column;
-        line-height: 1.1;
-    }
+        .avatar-chip .avatar-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+        }
 
-    .avatar-chip .name {
-        color: #ffffff; /* blanco si fondo oscuro */
-        font-weight: 500;
-        font-size: 0.9rem;
-    }
+        .avatar-chip .name {
+            color: #ffffff;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
 
-    .avatar-chip .role {
-        color: #9ca3af; /* gris suave */
-        font-size: 0.75rem;
-    }
-
-
-
+        .avatar-chip .role {
+            color: #9ca3af;
+            font-size: 0.75rem;
+        }
 
         /* Botones en navbar */
         .navbar-custom .btn-outline-light {
@@ -181,7 +178,6 @@
             color: #94a3b8;
         }
 
-        /* Resto de tus estilos dark mode se mantienen igual... */
         body.dark-mode .dropdown-menu {
             background-color: #1e293b;
             color: #e5e7eb;
@@ -198,56 +194,54 @@
         /* TABLAS - dark mode */
         body.dark-mode .table {
             --bs-table-bg: transparent;
-            --bs-table-color: #f9fafb; 
+            --bs-table-color: #f9fafb;
             --bs-table-border-color: #4b5563;
         }
 
         body.dark-mode .table thead {
-            background-color: #1f2937 !important; 
+            background-color: #1f2937 !important;
         }
 
         body.dark-mode .table th {
             background-color: #1f2937 !important;
-            color: #f9fafb !important; 
+            color: #f9fafb !important;
             border-bottom: 2px solid #374151 !important;
             font-weight: 600;
         }
 
         body.dark-mode .table td {
-            color: #e5e7eb !important; 
+            color: #e5e7eb !important;
             border-color: #374151 !important;
             background-color: #111827 !important;
         }
 
         body.dark-mode .table-striped > tbody > tr:nth-of-type(odd) > * {
-            --bs-table-accent-bg: #1a2231 !important; 
+            --bs-table-accent-bg: #1a2231 !important;
             color: #e5e7eb !important;
         }
 
         body.dark-mode .table-striped > tbody > tr:nth-of-type(even) > * {
-            background-color: #111827 !important; 
+            background-color: #111827 !important;
             color: #e5e7eb !important;
         }
 
         body.dark-mode .table-hover tbody tr:hover td {
-            background-color: #374151 !important; 
+            background-color: #374151 !important;
             color: #ffffff !important;
         }
 
-        /* Textos específicos en tablas */
         body.dark-mode .table .text-muted {
             color: #9ca3af !important;
         }
 
         body.dark-mode .table a {
-            color: #60a5fa !important; 
+            color: #60a5fa !important;
         }
 
         body.dark-mode .table a:hover {
             color: #93c5fd !important;
         }
 
-        /* TARJETAS / PANEL DE CONTROL */
         body.dark-mode .card,
         body.dark-mode .card-body,
         body.dark-mode .card-header,
@@ -271,7 +265,6 @@
             color: #d1d5db !important;
         }
 
-        /* BOTONES */
         body.dark-mode .btn-outline-primary {
             border-color: #60a5fa;
             color: #bfdbfe;
@@ -287,14 +280,12 @@
             border-color: #2563eb;
         }
 
-        /* ALERTAS */
         body.dark-mode .alert {
             background-color: #111827;
             color: #e5e7eb;
             border-color: #374151;
         }
 
-        /* INPUTS */
         body.dark-mode .form-control,
         body.dark-mode .form-select {
             background-color: #020617;
@@ -319,12 +310,107 @@
             .flex.justify-between.flex-1.sm\:hidden {
                 display: flex !important;
             }
-            
+
             .hidden.sm\:flex-1.sm\:flex.sm\:items-center.sm\:justify-between {
                 display: none !important;
             }
         }
 
+        /* ============================
+           LAYOUT CON SIDEBAR (DESKTOP)
+        ============================ */
+
+        /* Contenedor principal */
+        .app-shell {
+            display: flex;
+            min-height: calc(100vh - 60px); /* 60px aprox navbar */
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            background: #ffffff;
+            border-right: 1px solid #e5e7eb;
+            padding: 14px 12px;
+            position: sticky;
+            top: 0;
+            height: calc(100vh - 60px);
+            overflow-y: auto;
+        }
+
+        /* Links */
+        .sidebar .sidebar-title {
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: .04em;
+            color: #6b7280;
+            margin: 10px 10px 8px;
+            text-transform: uppercase;
+        }
+
+        .sidebar .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            padding: 10px 12px;
+            border-radius: 10px;
+            color: #1f2937;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color .2s ease, color .2s ease;
+        }
+
+        .sidebar .sidebar-link:hover {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        .sidebar .sidebar-link.active {
+            background-color: #eff6ff;
+            color: #1d4ed8;
+            font-weight: 600;
+        }
+
+        /* Contenido */
+        .main-content {
+            flex: 1;
+            padding: 0;
+        }
+
+        /* Solo desktop */
+        @media (max-width: 991px) {
+            .sidebar {
+                display: none;
+            }
+            .app-shell {
+                display: block;
+            }
+        }
+
+        /* ============================
+           DARK MODE PARA SIDEBAR
+        ============================ */
+        body.dark-mode .sidebar {
+            background-color: #0b1220;
+            border-right-color: #334155;
+        }
+
+        body.dark-mode .sidebar .sidebar-title {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .sidebar .sidebar-link {
+            color: #e5e7eb;
+        }
+
+        body.dark-mode .sidebar .sidebar-link:hover {
+            background-color: rgba(255, 255, 255, 0.06);
+        }
+
+        body.dark-mode .sidebar .sidebar-link.active {
+            background-color: rgba(59, 130, 246, 0.18);
+            color: #93c5fd;
+        }
     </style>
 </head>
 <body>
@@ -383,6 +469,17 @@
                             </a>
                         </li>
                     @endif
+
+                    {{-- Departamentos (Manager IT = super admin, o IT con permiso) --}}
+                    @if(auth()->user()->canManageDepartments())
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('departments.*') ? 'active' : '' }}"
+                               href="{{ route('departments.index') }}">
+                                <i class="bi bi-diagram-3 me-1"></i>
+                                Departamentos
+                            </a>
+                        </li>
+                    @endif
                 @endauth
 
             </ul>
@@ -400,42 +497,44 @@
                     @endif
                 @else
                     @php
+                        // Roles visibles en el badge
                         $rol = match(auth()->user()->role) {
-                            'Manager' => 'Gerente IT',
-                            'IT'      => 'Soporte IT',
-                            'Empleado' => 'Empleado',
-                            'User'    => 'Usuario',
-                            default   => 'Usuario'
+                            'Manager'      => 'Gerente IT',
+                            'IT'           => 'Soporte IT',
+                            'DeptManager'  => 'Gerente de Depto.',
+                            'DeptSupport'  => 'Soporte Depto.',
+                            'Empleado'     => 'Empleado',
+                            'User'         => 'Usuario',
+                            default        => 'Usuario'
                         };
-                        
+
                         $roleBadge = match(auth()->user()->role) {
-                            'Manager' => 'bg-warning text-dark',
-                            'IT'      => 'bg-info text-white',
-                            'Empleado' => 'bg-secondary text-white',
-                            'User'    => 'bg-light text-dark',
-                            default   => 'bg-light text-dark'
+                            'Manager'      => 'bg-warning text-dark',
+                            'IT'           => 'bg-info text-white',
+                            'DeptManager'  => 'bg-success text-white',
+                            'DeptSupport'  => 'bg-primary text-white',
+                            'Empleado'     => 'bg-secondary text-white',
+                            'User'         => 'bg-light text-dark',
+                            default        => 'bg-light text-dark'
                         };
-                        
                     @endphp
 
-            {{-- Avatar,nombre,rol y correo Navbar --}}               
-            @php
-                $user = auth()->user();
-                $initials = strtoupper(substr($user->name, 0, 1) . substr($user->lastname ?? '', 0, 1));
-            @endphp
+                    {{-- Avatar,nombre,rol y correo Navbar --}}
+                    @php
+                        $user = auth()->user();
+                        $initials = strtoupper(substr($user->name, 0, 1) . substr($user->lastname ?? '', 0, 1));
+                    @endphp
 
-            <div class="navbar-user d-flex align-items-center me-3">
-                <div class="avatar-wrapper me-2">{{ $initials }}</div>
-                <div class="navbar-user-meta text-start">
-                    <div class="name d-flex align-items-center gap-2">
-                        {{ $user->name }}
-                        <span class="badge {{ $roleBadge }} role-badge">{{ $rol }}</span>
+                    <div class="navbar-user d-flex align-items-center me-3">
+                        <div class="avatar-wrapper me-2">{{ $initials }}</div>
+                        <div class="navbar-user-meta text-start">
+                            <div class="name d-flex align-items-center gap-2">
+                                {{ $user->name }}
+                                <span class="badge {{ $roleBadge }} role-badge">{{ $rol }}</span>
+                            </div>
+                            <div class="email">{{ $user->email }}</div>
+                        </div>
                     </div>
-                    <div class="email">{{ $user->email }}</div>
-                </div>
-            </div>
-
-
 
                     <button type="button" id="themeToggle"
                             class="btn btn-sm btn-outline-light rounded-pill px-3">
@@ -459,24 +558,87 @@
 </nav>
 @endif
 
-<div class="container-fluid px-3">
-    @if(session('ok'))
-        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
-            <i class="bi bi-check-circle-fill me-2"></i>
-            {{ session('ok') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
+{{-- LAYOUT CON SIDEBAR + CONTENIDO --}}
+<div class="app-shell">
 
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
-            <i class="bi bi-exclamation-triangle-fill me-2"></i>
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
+    {{-- SIDEBAR (SOLO DESKTOP) --}}
+    @auth
+    <aside class="sidebar">
 
-    @yield('content')
+        <div class="sidebar-title">Navegación</div>
+
+        {{-- Dashboard (solo Manager) --}}
+        @if(auth()->user()->isManager())
+            <a class="sidebar-link {{ request()->routeIs('dashboard.*') ? 'active' : '' }}"
+               href="{{ route('dashboard.index') }}">
+                <i class="bi bi-speedometer2"></i>
+                Dashboard
+            </a>
+        @endif
+
+        {{-- Tickets (todos) --}}
+        <a class="sidebar-link {{ request()->routeIs('tickets.*') ? 'active' : '' }}"
+           href="{{ route('tickets.index') }}">
+            <i class="bi bi-ticket-detailed"></i>
+            Tickets
+        </a>
+
+        {{-- Kanban (si existe y tiene permiso) --}}
+        @can('viewKanban', App\Models\Ticket::class)
+            <a class="sidebar-link {{ request()->routeIs('tickets.kanban') ? 'active' : '' }}"
+               href="{{ route('tickets.kanban') }}">
+                <i class="bi bi-columns-gap"></i>
+                Kanban
+            </a>
+        @endcan
+
+        {{-- Usuarios (solo Manager) --}}
+        @if(auth()->user()->isManager())
+            <a class="sidebar-link {{ request()->routeIs('users.*') ? 'active' : '' }}"
+               href="{{ route('users.index') }}">
+                <i class="bi bi-people"></i>
+                Usuarios
+            </a>
+        @endif
+
+        {{-- Departamentos (Manager IT o IT con permiso) --}}
+        @if(auth()->user()->canManageDepartments())
+            <div class="sidebar-title mt-3">Administración</div>
+
+            <a class="sidebar-link {{ request()->routeIs('departments.*') ? 'active' : '' }}"
+               href="{{ route('departments.index') }}">
+                <i class="bi bi-diagram-3"></i>
+                Departamentos
+            </a>
+        @endif
+
+    </aside>
+    @endauth
+
+    {{-- CONTENIDO PRINCIPAL --}}
+    <main class="main-content">
+        <div class="container-fluid px-3">
+
+            @if(session('ok'))
+                <div class="alert alert-success alert-dismissible fade show shadow-sm mt-3" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    {{ session('ok') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show shadow-sm mt-3" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
+            @yield('content')
+        </div>
+    </main>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

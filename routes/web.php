@@ -2,7 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\SubdivisionController;
+
 use App\Http\Controllers\{
     TicketController,
     TicketAssignmentController,
@@ -17,18 +21,17 @@ use App\Http\Controllers\{
 |--------------------------------------------------------------------------
 */
 
+// OJO: Tenías 2 rutas "/" duplicadas. Dejé SOLO una para evitar conflicto.
+// Si querés la landing "welcome", cambiá esta ruta a: return view('welcome');
 Route::get('/', function () {
     return redirect()->route('tickets.index');
 });
 
-Route::get('/', function () {
-    return view('welcome'); //  landing page
-});
 Auth::routes();
 
 Route::middleware('auth')->group(function () {
 
-    // Tickets CRUD
+    // ===================== TICKETS CRUD =====================
     Route::resource('tickets', TicketController::class);
 
     // Generación IA
@@ -38,6 +41,7 @@ Route::middleware('auth')->group(function () {
     // Asignación de tickets
     Route::get('tickets/{ticket}/assign', [TicketAssignmentController::class, 'assignForm'])
         ->name('tickets.assign.form');
+
     Route::post('tickets/{ticket}/assign', [TicketAssignmentController::class, 'assign'])
         ->name('tickets.assign');
 
@@ -86,5 +90,41 @@ Route::middleware('auth')->group(function () {
     // Calificación de tickets
     Route::post('tickets/{ticket}/rate', [TicketController::class, 'rate'])
         ->name('tickets.rate');
-        
+
+    /*
+    |--------------------------------------------------------------------------
+    |   DEPARTAMENTOS + SUBDIVISIONES
+    |--------------------------------------------------------------------------
+    */
+
+    // Departamentos (solo Manager IT o IT con permiso, controlado en el controller)
+    Route::get('/departments', [DepartmentController::class, 'index'])
+        ->name('departments.index');
+
+    Route::get('/departments/create', [DepartmentController::class, 'create'])
+        ->name('departments.create');
+
+    Route::post('/departments', [DepartmentController::class, 'store'])
+        ->name('departments.store');
+
+    // ✅ EDITAR / ACTUALIZAR DEPARTAMENTO (ASIGNAR GERENTE)
+    Route::get('/departments/{department}/edit', [DepartmentController::class, 'edit'])
+        ->name('departments.edit');
+
+    Route::put('/departments/{department}', [DepartmentController::class, 'update'])
+        ->name('departments.update');
+
+    // Subdivisiones por departamento
+    Route::get('/departments/{department}/subdivisions', [SubdivisionController::class, 'index'])
+        ->name('departments.subdivisions.index');
+
+    Route::get('/departments/{department}/subdivisions/create', [SubdivisionController::class, 'create'])
+        ->name('departments.subdivisions.create');
+
+    Route::post('/departments/{department}/subdivisions', [SubdivisionController::class, 'store'])
+        ->name('departments.subdivisions.store');
+
+    // JSON options para el formulario de tickets
+    Route::get('/departments/{department}/subdivisions/options', [SubdivisionController::class, 'options'])
+        ->name('departments.subdivisions.options');
 });

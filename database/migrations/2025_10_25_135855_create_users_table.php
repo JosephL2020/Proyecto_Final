@@ -12,8 +12,9 @@ return new class extends Migration {
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('role')->default('employee'); 
-            $table->foreignId('department_id')->nullable()->constrained()->nullOnDelete();
+            $table->string('role')->default('employee');
+            // ✅ IMPORTANTE: department_id NO va aquí.
+            // Se agregará después en la migración add_department_id_to_users_table
             $table->rememberToken();
             $table->timestamps();
         });

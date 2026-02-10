@@ -9,10 +9,19 @@ class Department extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name',
+        'manager_user_id',
+        'created_by',
+    ];
 
-    public function users()
+    public function manager()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsTo(User::class, 'manager_user_id');
+    }
+
+    public function subdivisions()
+    {
+        return $this->hasMany(Subdivision::class);
     }
 }

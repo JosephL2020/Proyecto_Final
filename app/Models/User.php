@@ -10,57 +10,47 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    /**
-     * Roles estandarizados.
-     */
-    public const ROLE_MANAGER  = 'Manager';
-    public const ROLE_IT       = 'IT';
-    public const ROLE_EMPLOYEE = 'Empleado';
+    // Roles
+    public const ROLE_MANAGER       = 'Manager';      // Gerente IT (global)
+    public const ROLE_IT            = 'IT';           // Soporte IT
+    public const ROLE_EMPLOYEE      = 'Empleado';     // Usuario normal
+    public const ROLE_DEPT_MANAGER  = 'DeptManager';  // Gerente de departamento
+    public const ROLE_DEPT_SUPPORT  = 'DeptSupport';  // Soporte / Encargado de subdivisión
 
-    /**
-     * Atributos que se pueden asignar en masa.
-     */
     protected $fillable = [
         'name',
+        // 'lastname', // ✅ Solo si tu tabla users realmente tiene esta columna
         'email',
         'password',
         'role',
         'is_active',
+        'can_manage_departments',
+        'department_id',
     ];
 
-    /**
-     * Atributos ocultos para arrays.
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Casts.
-     */
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        'is_active'         => 'boolean',
-        'password'          => 'hashed',
+        'is_active'              => 'boolean',
+        'can_manage_departments' => 'boolean',
+        'email_verified_at'      => 'datetime',
+        'password'               => 'hashed',
     ];
-
-    /*
-    |--------------------------------------------------------------------------
-    | Helpers de rol y estado
-    |--------------------------------------------------------------------------
-    */
 
     public static function roleOptions(): array
     {
         return [
-            self::ROLE_MANAGER  => 'Gerente IT',
-            self::ROLE_IT       => 'Soporte IT',
-            self::ROLE_EMPLOYEE => 'Empleado',
+            self::ROLE_MANAGER      => 'Gerente IT',
+            self::ROLE_IT           => 'Soporte IT',
+            self::ROLE_DEPT_MANAGER => 'Gerente de Departamento',
+            self::ROLE_DEPT_SUPPORT => 'Soporte de Subdivisión',
+            self::ROLE_EMPLOYEE     => 'Empleado',
         ];
     }
 
-    // Helpers ajustados para que coincidan con el controlador
     public function isManager(): bool
     {
         return $this->role === self::ROLE_MANAGER;
@@ -71,9 +61,24 @@ class User extends Authenticatable
         return $this->role === self::ROLE_IT;
     }
 
+    public function isDeptManager(): bool
+    {
+        return $this->role === self::ROLE_DEPT_MANAGER;
+    }
+
+    public function isDeptSupport(): bool
+    {
+        return $this->role === self::ROLE_DEPT_SUPPORT;
+    }
+
     public function isEmployee(): bool
     {
-        return !$this->isManager() && !$this->isIt();
+        return $this->role === self::ROLE_EMPLOYEE;
+    }
+
+    public function canManageDepartments(): bool
+    {
+        return $this->isManager() || ($this->isIt() && (bool) $this->can_manage_departments);
     }
 
     public function isActive(): bool
@@ -81,12 +86,15 @@ class User extends Authenticatable
         return (bool) $this->is_active;
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Relaciones con tickets
-    |--------------------------------------------------------------------------
-    */
+    /**
+     * ✅ Relación con Department (recomendado)
+     */
+    public function department()
+    {
+        return $this->belongsTo(\App\Models\Department::class);
+    }
 
+    // Tickets
     public function createdTickets()
     {
         return $this->hasMany(Ticket::class, 'created_by');

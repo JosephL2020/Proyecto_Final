@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
@@ -34,7 +35,7 @@ class UserController extends Controller
     {
         $query = User::query();
 
-        // Filtrar por rol exacto: Manager, IT, Empleado
+        // Filtrar por rol exacto
         if ($role = $request->input('role')) {
             $query->where('role', $role);
         }
@@ -56,12 +57,15 @@ class UserController extends Controller
             ->paginate(10)
             ->withQueryString();
 
+        // STATS ACTUALIZADO (incluye roles nuevos)
         $stats = [
-            'total'     => User::count(),
-            'managers'  => User::where('role', 'Manager')->count(),
-            'its'       => User::where('role', 'IT')->count(),
-            'employees' => User::where('role', 'Empleado')->count(),
-            'active'    => User::where('is_active', true)->count(),
+            'total'        => User::count(),
+            'managers'     => User::where('role', 'Manager')->count(),
+            'its'          => User::where('role', 'IT')->count(),
+            'deptManagers' => User::where('role', 'DeptManager')->count(),
+            'deptSupports' => User::where('role', 'DeptSupport')->count(),
+            'employees'    => User::where('role', 'Empleado')->count(),
+            'active'       => User::where('is_active', true)->count(),
         ];
 
         return view('users.index', compact('users', 'stats'));
@@ -72,7 +76,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        $departments = Department::orderBy('name')->get();
+        return view('users.create', compact('departments'));
     }
 
     /**
@@ -80,7 +85,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $validRoles = ['Manager', 'IT', 'Empleado'];
+        $validRoles = ['Manager', 'IT', 'Empleado', 'DeptManager', 'DeptSupport'];
 
         $data = $request->validate([
             'name'     => ['required', 'string', 'max:255'],
@@ -88,10 +93,26 @@ class UserController extends Controller
             'password' => ['required', 'string', 'min:6'],
             'role'     => ['required', Rule::in($validRoles)],
             'is_active'=> ['nullable', 'boolean'],
+
+            'can_manage_departments' => ['nullable', 'boolean'],
+
+            // Obligatorio para todos menos Manager
+            'department_id' => [
+                Rule::requiredIf(fn () => $request->input('role') !== 'Manager'),
+                'nullable',
+                'integer',
+                'exists:departments,id',
+            ],
         ]);
 
         $data['password']  = Hash::make($data['password']);
         $data['is_active'] = $data['is_active'] ?? true;
+        $data['can_manage_departments'] = $data['can_manage_departments'] ?? false;
+
+        // Manager no va amarrado a departamento
+        if (($data['role'] ?? null) === 'Manager') {
+            $data['department_id'] = null;
+        }
 
         User::create($data);
 
@@ -101,43 +122,65 @@ class UserController extends Controller
     }
 
     /**
-     * Editar usuario.
+     * Editar usuario (pasa departamentos)
      */
     public function edit(User $user)
     {
-        return view('users.edit', compact('user'));
+        $departments = Department::orderBy('name')->get();
+        return view('users.edit', compact('user', 'departments'));
     }
 
     /**
-     * Actualizar usuario.
+     * Actualizar usuario (CON department_id + checkboxes + password confirmed)
      */
     public function update(Request $request, User $user)
     {
-        $validRoles = ['Manager', 'IT', 'Empleado'];
+        $validRoles = ['Manager', 'IT', 'Empleado', 'DeptManager', 'DeptSupport'];
 
-        // Validación principal
         $data = $request->validate([
-            'name'  => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-            'role'  => 'required|in:' . implode(',', $validRoles),
+            'name'  => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'role'  => ['required', Rule::in($validRoles)],
+
+            'is_active' => ['nullable', 'boolean'],
+            'can_manage_departments' => ['nullable', 'boolean'],
+
+            // Obligatorio para todos menos Manager
+            'department_id' => [
+                Rule::requiredIf(fn () => $request->input('role') !== 'Manager'),
+                'nullable',
+                'integer',
+                'exists:departments,id',
+            ],
         ]);
 
-        // Contraseña opcional
+        // Contraseña opcional (con confirmación)
         if ($request->filled('password')) {
             $request->validate([
-                'password' => 'nullable|string|min:6|confirmed',
+                'password' => ['nullable', 'string', 'min:6', 'confirmed'],
             ]);
-            $data['password'] = bcrypt($request->password);
+            $data['password'] = Hash::make($request->password);
+        }
+
+        // Defaults para checkboxes (si no viene, es false)
+        $data['is_active'] = $request->boolean('is_active');
+        $data['can_manage_departments'] = $request->boolean('can_manage_departments');
+
+        // Manager no va amarrado a departamento
+        if (($data['role'] ?? null) === 'Manager') {
+            $data['department_id'] = null;
         }
 
         // Evitar desactivar tu propia cuenta
-        if ($user->id === $request->user()->id && isset($data['is_active']) && !$data['is_active']) {
+        if ((int) $user->id === (int) $request->user()->id && $data['is_active'] === false) {
             return back()->with('error', 'No puedes desactivar tu propia cuenta.');
         }
 
         $user->update($data);
 
-        return redirect()->route('users.index')->with('ok', 'Usuario actualizado correctamente.');
+        return redirect()
+            ->route('users.index')
+            ->with('ok', 'Usuario actualizado correctamente.');
     }
 
     /**

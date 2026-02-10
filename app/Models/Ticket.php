@@ -10,27 +10,31 @@ class Ticket extends Model
     use HasFactory;
 
     protected $fillable = [
-        'code','title','description','category_id','priority','status',
+        'code','title','description',
+        'department_id','subdivision_id',
+        'category_id','priority','status',
         'created_by','assigned_to','resolved_at',
         'rating','rating_comment','rated_by','rated_at'
     ];
 
-    // Casts para asegurarnos de que fechas sean datetime
     protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
+        'created_at'  => 'datetime',
+        'updated_at'  => 'datetime',
         'resolved_at' => 'datetime',
-        'rated_at'   => 'datetime',
+        'rated_at'    => 'datetime',
     ];
 
     public function creator() { return $this->belongsTo(User::class, 'created_by'); }
     public function assignee() { return $this->belongsTo(User::class, 'assigned_to'); }
+
+    public function department() { return $this->belongsTo(Department::class); }
+    public function subdivision() { return $this->belongsTo(Subdivision::class); }
+
     public function category() { return $this->belongsTo(Category::class); }
     public function comments() { return $this->hasMany(TicketComment::class); }
     public function histories() { return $this->hasMany(TicketStatusHistory::class); }
     public function aiSuggestion() { return $this->hasOne(AiSuggestion::class); }
 
-    // 👇 NUEVA RELACIÓN (adjuntos del ticket)
     public function attachments()
     {
         return $this->hasMany(\App\Models\TicketAttachment::class);

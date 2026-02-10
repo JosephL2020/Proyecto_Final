@@ -9,13 +9,28 @@ use Illuminate\Support\Facades\Gate;
 
 class TicketController extends Controller
 {
+    // ===================== LISTADO =====================
     public function index(Request $request)
     {
         $user = $request->user();
-        $query = Ticket::with('assignee');
+
+        $query = Ticket::with(['assignee','department','subdivision']);
 
         if ($user) {
             if ($user->isManager()) {
+                // ve todo
+            } elseif ($user->isDeptManager()) {
+                // tickets del departamento que administra
+                $deptIds = \App\Models\Department::where('manager_user_id', $user->id)->pluck('id');
+                $query->whereIn('department_id', $deptIds);
+            } elseif ($user->isDeptSupport()) {
+                // tickets de sus subdivisiones (por agent_user_id) o asignados a él
+                $subIds = \App\Models\Subdivision::where('agent_user_id', $user->id)->pluck('id');
+
+                $query->where(function ($q) use ($user, $subIds) {
+                    $q->where('assigned_to', $user->id)
+                      ->orWhereIn('subdivision_id', $subIds);
+                });
             } elseif ($user->isIt()) {
                 $query->where('assigned_to', $user->id);
             } else {
@@ -39,30 +54,54 @@ class TicketController extends Controller
             $query->where('priority', $priority);
         }
 
-        $tickets = $query->orderByDesc('created_at')
-                         ->paginate(10)
-                         ->withQueryString();
+        $tickets = $query->orderByDesc('id')->paginate(12)->withQueryString();
 
-        $its = User::whereRaw("UPPER(role) IN ('IT','MANAGER')")
-                   ->orderBy('name')
-                   ->get();
-
-        return view('tickets.index', compact('tickets', 'its'));
+        return view('tickets.index', compact('tickets'));
     }
 
+    // ===================== KANBAN (ARREGLADO PARA DeptManager / DeptSupport) =====================
     public function kanban(Request $request)
     {
         $user = $request->user();
-        $query = Ticket::with(['creator', 'assignee']);
 
-        if ($user->isManager()) {
-        } elseif ($user->isIt()) {
-            $query->where('assigned_to', $user->id);
-        } else {
-            $query->where('created_by', $user->id);
+        $query = Ticket::with(['creator', 'assignee', 'department', 'subdivision']);
+
+        if ($user) {
+            if ($user->isManager()) {
+                // ve todo
+            } elseif ($user->isDeptManager()) {
+                // tickets del departamento que administra
+                $deptIds = \App\Models\Department::where('manager_user_id', $user->id)->pluck('id');
+                $query->whereIn('department_id', $deptIds);
+            } elseif ($user->isDeptSupport()) {
+                // tickets de sus subdivisiones (por agent_user_id) o asignados a él
+                $subIds = \App\Models\Subdivision::where('agent_user_id', $user->id)->pluck('id');
+
+                $query->where(function ($q) use ($user, $subIds) {
+                    $q->where('assigned_to', $user->id)
+                      ->orWhereIn('subdivision_id', $subIds);
+                });
+            } elseif ($user->isIt()) {
+                $query->where('assigned_to', $user->id);
+            } else {
+                $query->where('created_by', $user->id);
+            }
         }
 
-        $tickets = $query->orderBy('created_at', 'desc')->get();
+        // Filtros opcionales (si los usás en la vista)
+        if ($search = $request->input('s')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('code', 'like', "%{$search}%")
+                  ->orWhere('title', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        if ($priority = $request->input('priority')) {
+            $query->where('priority', $priority);
+        }
+
+        $tickets = $query->orderByDesc('id')->get();
 
         $columns = [
             'open'        => 'Abiertos',
@@ -70,6 +109,7 @@ class TicketController extends Controller
             'in_progress' => 'En progreso',
             'resolved'    => 'Resueltos',
             'closed'      => 'Cerrados',
+            'cancelled'   => 'Cancelados',
         ];
 
         $grouped = $tickets->groupBy('status');
@@ -77,22 +117,40 @@ class TicketController extends Controller
         return view('tickets.kanban', compact('columns', 'grouped'));
     }
 
+    // ===================== CREAR =====================
     public function create()
     {
-        $categories = Category::orderBy('name')->get();
-        return view('tickets.create', compact('categories'));
+        $categories  = Category::orderBy('name')->get();
+        $departments = \App\Models\Department::orderBy('name')->get();
+
+        return view('tickets.create', compact('categories', 'departments'));
     }
 
+    // ===================== GUARDAR =====================
     public function store(Request $request, RecommendationService $recommendation)
     {
         $data = $request->validate([
-            'title'       => 'required|string|max:255',
-            'description' => 'required|string',
-            'category_id' => 'nullable|exists:categories,id',
+            'title'          => 'required|string|max:255',
+            'description'    => 'required|string',
+            'department_id'  => 'required|exists:departments,id',
+            'subdivision_id' => 'required|exists:subdivisions,id',
+            'category_id'    => 'nullable|exists:categories,id',
         ]);
+
+        // Validar que la subdivisión pertenezca al departamento
+        $sub = \App\Models\Subdivision::where('id', $data['subdivision_id'])
+            ->where('department_id', $data['department_id'])
+            ->first();
+
+        if (!$sub) {
+            return back()->withErrors([
+                'subdivision_id' => 'La subdivisión seleccionada no pertenece al departamento elegido.',
+            ])->withInput();
+        }
 
         $data['created_by'] = $request->user()->id;
         $data['priority']   = 'medium';
+
         $nextId = (Ticket::max('id') ?? 0) + 1;
         $data['code'] = 'TCK-' . str_pad($nextId, 6, '0', STR_PAD_LEFT);
 
@@ -153,7 +211,9 @@ class TicketController extends Controller
 
         $categories = Category::orderBy('name')->get();
         $user = auth()->user();
-        $limited = $user->isIt() && (int)$user->id === (int)$ticket->assigned_to;
+
+        // ✅ LIMITADO TAMBIÉN PARA DeptSupport ASIGNADO
+        $limited = ($user->isIt() || $user->isDeptSupport()) && (int)$user->id === (int)$ticket->assigned_to;
 
         $allowedStatuses = $limited
             ? ['in_progress', 'resolved', 'cancelled']
@@ -167,7 +227,9 @@ class TicketController extends Controller
         Gate::authorize('update', $ticket);
 
         $user = $request->user();
-        $isAssignedLimited = $user->isIt() && (int)$user->id === (int)$ticket->assigned_to;
+
+        // ✅ LIMITADO TAMBIÉN PARA DeptSupport ASIGNADO
+        $isAssignedLimited = ($user->isIt() || $user->isDeptSupport()) && (int)$user->id === (int)$ticket->assigned_to;
 
         $data = $isAssignedLimited
             ? $request->validate(['status' => 'required|in:in_progress,resolved,cancelled'])
